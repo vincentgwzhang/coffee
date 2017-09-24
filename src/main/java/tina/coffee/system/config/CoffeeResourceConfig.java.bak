@@ -1,0 +1,162 @@
+package tina.coffee.system.config;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import tina.coffee.business.DesktopService;
+import tina.coffee.business.ImportHistoryService;
+import tina.coffee.business.ImportHistorySummaryService;
+import tina.coffee.business.ImportProductService;
+import tina.coffee.business.MenuCategoryService;
+import tina.coffee.business.MenuItemService;
+import tina.coffee.business.MenuQueueService;
+import tina.coffee.business.OrderItemService;
+import tina.coffee.business.OrderService;
+import tina.coffee.rest.resources.DesktopResource;
+import tina.coffee.rest.resources.ImportHistoryResource;
+import tina.coffee.rest.resources.ImportProductResource;
+import tina.coffee.rest.resources.MenuCategoryResource;
+import tina.coffee.rest.resources.MenuItemResource;
+import tina.coffee.rest.resources.MenuQueueResource;
+import tina.coffee.rest.resources.OrderItemResource;
+import tina.coffee.rest.resources.OrderResource;
+import tina.coffee.rest.resources.PingResource;
+import tina.coffee.system.resolver.ObjectMapperContextResolver;
+import tina.coffee.system.resolver.ValidationConfigurationContextResolver;
+
+
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Set;
+
+@Configuration
+public class CoffeeResourceConfig {
+
+    private static final String EXCEPTION_MAPPER_PACKAGE = "tina.coffee.system.exceptions.mapper";
+
+    @Autowired
+    private MenuCategoryService menuCategoryService;
+
+    @Autowired
+    private MenuItemService menuItemService;
+
+    @Autowired
+    private DesktopService desktopService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private OrderItemService orderItemService;
+
+    @Autowired
+    private MenuQueueService menuQueueService;
+
+    @Autowired
+    private ImportProductService importProductService;
+
+    @Autowired
+    private ImportHistoryService importHistoryService;
+
+    @Autowired
+    private ImportHistorySummaryService importHistorySummaryService;
+
+    @Bean(name="objectMapper")
+    public ObjectMapper objectMapper(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setSerializationInclusion(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL);
+        return objectMapper;
+    }
+
+    @Bean(name="resourceConfig")
+    public ResourceConfig resourceConfig() throws Exception {
+        ResourceConfig courseResourceConfig = new ResourceConfig();
+        courseResourceConfig.setApplicationName("coffee");
+        courseResourceConfig.register(new ObjectMapperContextResolver(objectMapper()));
+        courseResourceConfig.register(ValidationConfigurationContextResolver.class);
+        courseResourceConfig.register(JacksonFeature.class);
+        courseResourceConfig.register(MultiPartFeature.class);
+        courseResourceConfig.property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
+        courseResourceConfig.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+        courseResourceConfig.property(ServerProperties.MONITORING_STATISTICS_MBEANS_ENABLED, true);
+        courseResourceConfig.packages(EXCEPTION_MAPPER_PACKAGE);
+
+        courseResourceConfig.registerInstances(rsInstance());
+
+        return courseResourceConfig;
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setObjectMapper(objectMapper());
+        return converter;
+    }
+
+    private Set<Object> rsInstance(){
+        Set<Object> instances= new HashSet<>();
+        instances.add(pingResource());
+        instances.add(menuCategoryResource());
+        instances.add(menuItemResource());
+        instances.add(desktopResource());
+        instances.add(orderResource());
+        instances.add(orderItemResource());
+        instances.add(menuQueueResource());
+        instances.add(importHistoryResource());
+        instances.add(importProductResource());
+        return instances;
+    }
+
+    @Bean
+    public OrderResource orderResource() {
+        return new OrderResource(orderService, orderItemService);
+    }
+
+    @Bean
+    public OrderItemResource orderItemResource() {
+        return new OrderItemResource(orderService, orderItemService);
+    }
+
+    @Bean
+    public PingResource pingResource(){
+        return new PingResource();
+    }
+
+    @Bean
+    public MenuCategoryResource menuCategoryResource() {
+        return new MenuCategoryResource(menuCategoryService);
+    }
+
+    @Bean
+    public DesktopResource desktopResource() {
+        return new DesktopResource(desktopService);
+    }
+
+    @Bean
+    public MenuItemResource menuItemResource() {
+        return new MenuItemResource(menuItemService);
+    }
+
+    public MenuQueueResource menuQueueResource() {
+        return new MenuQueueResource(menuQueueService);
+    }
+
+    public ImportProductResource importProductResource() {
+        return new ImportProductResource(importProductService);
+    }
+
+    public ImportHistoryResource importHistoryResource() {
+        return new ImportHistoryResource(importHistoryService, importHistorySummaryService);
+    }
+}

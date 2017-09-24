@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-select.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/order_adjust.css}" />
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7; margin-bottom: 50px;">
+    <h1>订单管理</h1>
+</div>
+
+<div class="container-fluid">
+    <div class="row .hidden-sm .hidden-xs">
+        <div class="col-md-5 col-lg-5">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <p class="bg-primary text-center">原本订单</p>
+                </div>
+            </div>
+            <div class="row" th:each="order,row : ${orders}">
+                <div class="col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <table class="table">
+                                <tr>
+                                    <td width="20%">Order number:<input type="hidden" th:id="${'hid_ori_order_total_' + order.orderId}" th:value="${order.totalPrice}" /></td>
+                                    <td>[[${order.orderId}]]</td>
+                                </tr>
+                                <tr>
+                                    <td>Order time:</td>
+                                    <td>[[${order.startTime}]]</td>
+                                </tr>
+                                <tr>
+                                    <td>总价:</td>
+                                    <td th:text="${order.totalPrice}" />
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td width="5%">SN</td>
+                                    <td width="65%">名称</td>
+                                    <td width="10%">单价</td>
+                                    <td width="10%">数量</td>
+                                    <td width="10%">总价</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="orderItem, itemRow: ${order.items}">
+                                    <td>[[${itemRow.count}]]</td>
+                                    <td>[[${orderItem.descSP}]]</td>
+                                    <td>[[${orderItem.price}]]</td>
+                                    <td>[[${orderItem.count}]]</td>
+                                    <td>[[${orderItem.count * orderItem.price}]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <hr style="margin:30px; border: 1px #337ab7 solid;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-lg-2">
+            <div class="pinned">
+                <table class="indicator_table">
+                    <thead>
+                        <td class="bg-success text-center">调整前总价</td>
+                        <td class="bg-primary text-center">调整后总价</td>
+                    </thead>
+                    <tr>
+                        <td class="indicator_td"><span id="p_ori_total_order_value"></span></td>
+                        <td class="indicator_td"><span id="p_upt_total_order_value"></span></td>
+                    </tr>
+                </table>
+
+                <p class="p_button">
+                    <button type="button" id="btnGenPDF" class="btn btn-success btn-lg">生成PDF文档</button>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-5" style="background-color: white;">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <p class="bg-success text-center">调整订单</p>
+                </div>
+            </div>
+
+            <div class="row" th:each="order,row : ${orders}" th:id="${'pdf_page_order_' + order.orderId}">
+                <div class="col-md-12 col-lg-12" style="background-color: white;">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <table class="table">
+                                <tr>
+                                    <td width="20%">Order number:</td>
+                                    <td>[[${order.orderId}]]</td>
+                                </tr>
+                                <tr>
+                                    <td>Order time:</td>
+                                    <td>[[${order.startTime}]]</td>
+                                </tr>
+                                <tr>
+                                    <td>precio total:</td>
+                                    <td><span th:id="${'span_upt_order_' + order.orderId}">[[${order.totalPrice}]]</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <td width="5%">SN</td>
+                                    <td width="65%">nombre</td>
+                                    <td width="10%">precio unitario</td>
+                                    <td width="10%">cantidad</td>
+                                    <td width="10%">precio total</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="orderItem, itemRow: ${order.items}">
+                                    <td>[[${itemRow.count}]]</td>
+                                    <td>[[${orderItem.descSP}]]</td>
+                                    <td><input type="text" th:id="${'txt_upt_price_' + orderItem.orderId + '_' + orderItem.orderItemId}" th:value="${orderItem.price}" class="upt_order_item_txt" /> </td>
+                                    <td><input type="text" th:id="${'txt_upt_count_' + orderItem.orderId + '_' + orderItem.orderItemId}" th:value="${orderItem.count}" class="upt_order_item_txt" /> </td>
+                                    <td><span th:id="${'span_upt_price_' + orderItem.orderId + '_' + orderItem.orderItemId}">[[${orderItem.count * orderItem.price}]]</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <hr style="margin: 30px; border: 1px #5cb85c solid;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<strong id="tip"></strong>
+<script type='text/javascript' th:src="@{/js/common/jquery.pin.js}"></script>
+<script type='text/javascript' th:src="@{/js/common/html2canvas.min.js}"></script>
+<script type='text/javascript' th:src="@{/js/common/html2canvas.svg.min.js}"></script>
+<script type='text/javascript' th:src="@{/js/common/jspdf.min.js}"></script>
+<script type='text/javascript' th:src="@{/js/admin/order_adjust.js}"></script>
+<script language="JavaScript">
+    $(".pinned").pin({containerSelector: ".container-fluid", minWidth: 940});
+</script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

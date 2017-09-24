@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h1><p class="bg-primary">系统出错， 请联系维护人员</p></h1>
+            <h3><p class="bg-danger">详细原因：[(${error.message})]</p></h3>
+            <h3><p class="bg-info">解决步骤：</p></h3>
+            <h3><p class="bg-info">1，尝试按浏览器返回。</p></h3>
+            <h3><p class="bg-info">2，尝试退出</p></h3>
+            <h3><p class="bg-info">3，尝试联系开发人员，详细说明出错的步骤</p></h3>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

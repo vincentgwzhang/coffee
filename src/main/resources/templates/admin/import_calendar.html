@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <script type='text/javascript' th:src="@{/js/common/bootstrap-datepicker.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datepicker.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/order_calendar.css}" />
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7;">
+    <h1>入货管理</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+            <div class="pinned">
+                <div id="slt_calendar"></div>
+                <hr style="border: 1px #337ab7 solid;" />
+                <p style="background-color: #d9edf7;">有入货记录</p>
+                <hr style="border: 1px #337ab7 solid;" />
+                <h2>该月共买入</h2>
+                <span style="color:red;" id="importTotal"></span>
+                <hr style="border: 1px #337ab7 solid;" />
+                <p><button type="button" class="btn btn-primary btn_full_width" id="btn_back_month">返回本月</button></p>
+                <p><button type="button" class="btn btn-primary btn_full_width" id="btn_back_day">管理今天</button></p>
+            </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+        <div class="col-xs-5 col-sm-5 col-md-9 col-lg-9">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">日期</th>
+                    <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">总额</th>
+                    <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="day : ${dates}" th:object="${overviewWrapper.summaryWrapperMap.get(day)}" th:class="*{hasValue}?'info':'active'" th:id="${'tr_top_' + day}">
+                    <td>[[${day}]]</td>
+                    <td th:id="${'td_' + day}" th:if="*{hasValue}">[[*{importHistorySummaryDTO.ihsPrice}]]<input type="hidden" th:id="${'hdn_summary_price_' + day}" th:value="*{importHistorySummaryDTO.ihsPrice}"></td>
+                    <td th:unless="*{hasValue}">0</td>
+                    <td>
+                        <button type="button" class="btn btn-success" th:id="${'btn_detail_' + day}">详细</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-danger" th:id="${'btn_delete_' + day}" th:if="*{hasValue}">删除</button>
+                        <input type="hidden" th:if="*{hasValue}" th:id="${'hdn_summary_value_' + day}" th:value="*{importHistorySummaryDTO}" />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<strong id="tip"></strong>
+<script type='text/javascript' th:src="@{/js/common/jquery.pin.js}"></script>
+<script type='text/javascript' th:src="@{/js/admin/import_calendar.js}"></script>
+<script language="JavaScript">
+    $(".pinned").pin({containerSelector: ".container", minWidth: 540});
+</script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

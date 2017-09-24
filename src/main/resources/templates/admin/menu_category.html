@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/menu_category.css}" />
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7;">
+    <h1>菜单栏目管理</h1>
+</div>
+
+<div class="container">
+    <div class="row" th:each="menu : ${menuCategories}">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="panel panel-primary" th:id="${'mc_top_' + menu.mcId}" th:class="${menu.mcEnable} ? 'panel panel-primary' : 'panel panel-default'">
+                <div class="panel-heading">
+                    <div class="alert alert-success" th:id="${'mc_tip_' + menu.mcId}">
+                        保存成功
+                    </div>
+                </div>
+                <div class="panel-body panel-info" >
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-12 col-sm-6 col-md-2 col-lg-2 text-center">语言</th>
+                                <th class="col-xs-12 col-sm-6 col-md-10 col-lg-10">菜名</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-center">中文</td>
+                            <td><input type="text" class="input_lanauge" th:id="${'menu_cate_lg_cn_' + menu.mcId}" th:value="${menu.descCN}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">英文</td>
+                            <td><input type="text" class="input_lanauge" th:id="${'menu_cate_lg_en_' + menu.mcId}" th:value="${menu.descEN}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">西文</td>
+                            <td><input type="text" class="input_lanauge" th:id="${'menu_cate_lg_sp_' + menu.mcId}" th:value="${menu.descSP}" /></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2 text-right">
+                            <input type="checkbox" th:id="${'menu_cate_active_' + menu.mcId}" data-toggle="toggle" data-on="激活状态" data-off="隐藏状态" th:checked="${menu.mcEnable}" />
+                            <input type="hidden" th:id="${'menu_cate_value_' + menu.mcId}" th:value='${#strings.unescapeJavaScript(menu)}' />
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-10 col-lg-10 text-right">
+                            <button type="button" class="btn btn-primary" th:id="${'desk_save_btn_' + menu.mcId}">保存</button>
+                            <button type="button" class="btn btn-danger" style="margin-left: 15px;" th:id="${'desk_del_btn_' + menu.mcId}">删除</button>
+                            <button type="button" class="btn btn-primary" style="margin-left: 15px;" th:id="${'desk_check_btn_' + menu.mcId}">查看子菜单</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="panel panel-info">
+                <div class="panel-heading"></div>
+                <div class="panel-body panel-info" >
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="col-xs-12 col-sm-6 col-md-2 col-lg-2 text-center">语言</th>
+                            <th class="col-xs-12 col-sm-6 col-md-10 col-lg-10">菜名</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-center">中文</td>
+                            <td><input type="text" class="input_lanauge" th:id="${'new_menu_cate_lg_cn'}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">英文</td>
+                            <td><input type="text" class="input_lanauge" th:id="${'new_menu_cate_lg_en'}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">西文</td>
+                            <td><input type="text" class="input_lanauge" th:id="${'new_menu_cate_lg_sp'}" /></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2 text-right">
+                            <input type="checkbox" th:id="${'new_menu_cate_active'}" data-toggle="toggle" data-on="激活状态" data-off="隐藏状态" />
+                            <input type="hidden" th:id="${'new_menu_cate_value'}" />
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-10 col-lg-10 text-right">
+                            <button type="button" class="btn btn-primary" id="new_desk_btn">新增</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<strong id="tip"></strong>
+<script type='text/javascript' th:src="@{/js/admin/menu_category.js}"></script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/operator/desktop.css}" />
+</head>
+<body>
+<div th:replace="fragments/operator :: operator-header"/>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" th:each="op_desk : ${operator_desktops}" th:id="${'op_desk_' + op_desk.deskNo}">
+            <div th:id="${'op_desk_div_' + op_desk.deskNo}">
+                <div class="panel-heading">[[#{operator.order.desktopnumber}]]：<span th:text="${op_desk.deskNo}"></span></div>
+                <div class="panel-body">
+                    <img th:src="@{/images/desktop.png}" class="img-responsive center-block" />
+                </div>
+                <div class="panel-footer">
+                    <input type="button" class="btn btn_avail" th:if="${op_desk.deskEnable && !op_desk.deskOccupied}" th:id="${'op_desk_btn_open_' + op_desk.deskNo}" th:value="#{operator.desktop.opendesk}" />
+                    <input type="button" class="btn btn_disabled" th:if="${!op_desk.deskEnable}" th:id="${'op_desk_btn_disabled_' + op_desk.deskNo}" th:value="#{operator.desktop.disabled}" disabled="true" />
+                    <input type="button" class="btn btn_occupied" th:if="${op_desk.deskOccupied}" th:id="${'op_desk_btn_occupied_' + op_desk.deskNo}" th:value="#{operator.desktop.occupied}" />
+                    <input type="hidden" th:id="${'op_desk_data_' + op_desk.deskNo}" th:value='${#strings.unescapeJavaScript(op_desk)}' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript' th:src="@{/js/operator/desktop.js}"></script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

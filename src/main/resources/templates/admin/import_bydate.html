@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/menu_category.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/import_bydate.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-select.css}" />
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7;">
+    <h1>入货详细记录</h1>
+</div>
+
+<div class="container">
+
+    <div class="row .hidden-sm .hidden-xs">
+        <div class="col-md-12 col-lg-12 import_date">
+            日期：<span id="import_date"></span>, 本次买入共：<span id="import_total"></span>
+        </div>
+    </div>
+    <div class="row .hidden-sm .hidden-xs">
+        <div class="col-md-10 col-lg-10">
+            <div class="row" th:each="importedProduct : ${import_product_list}" th:id="${'import_product_top_' + importedProduct.ihId}">
+                <div class="col-md-12 col-lg-12">
+                    <div class="panel panel-primary" th:id="${'import_product_div_' + importedProduct.ihId}">
+                        <div class="panel-heading"></div>
+                        <div class="panel-body panel-info" >
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-8 col-lg-8 text-left">物品名称</th>
+                                    <th class="col-md-2 col-lg-2 text-left">物品数量</th>
+                                    <th class="col-md-2 col-lg-2 text-left">物品总价</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left">
+                                            <div class="select">
+                                                <select th:id="${'import_product_dp_' + importedProduct.ihId}">
+                                                    <option th:each="op_prd : ${products}" th:value="${op_prd.ipId}" th:text="${op_prd.cnName}" th:selected="${op_prd.ipId == importedProduct.ihIpId}">Wireframe</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td class="text-left">
+                                            <input type="text" class="input_lanauge" th:id="${'import_product_count_' + importedProduct.ihId}" th:value="${importedProduct.count}" />
+                                        </td>
+                                        <td class="text-left">
+                                            <input type="text" class="input_lanauge" th:id="${'import_product_price_' + importedProduct.ihId}" th:value="${importedProduct.ihPrice}" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-4 text-left">
+                                    <input type="checkbox" th:id="${'import_product_finish_' + importedProduct.ihId}" data-toggle="toggle" data-on="检查中" data-off="检查完成" th:checked="true" />
+                                    <input type="hidden" th:id="${'import_product_value_' + importedProduct.ihId}" th:value='${#strings.unescapeJavaScript(importedProduct)}' />
+                                </div>
+                                <div class="col-md-8 col-lg-8 text-right">
+                                    <button type="button" class="btn btn-primary" th:id="${'import_product_save_btn_' + importedProduct.ihId}">保存</button>
+                                    <button type="button" class="btn btn-danger" style="margin-left: 15px;" th:id="${'import_product_del_btn_' + importedProduct.ihId}">删除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"></div>
+                        <div class="panel-body panel-info" >
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-8 col-lg-8 text-left">物品名称</th>
+                                        <th class="col-md-2 col-lg-2 text-left">物品数量</th>
+                                        <th class="col-md-2 col-lg-2 text-left">物品总价</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-left">
+                                        <div class="select">
+                                            <select id="new_import_product_dp">
+                                                <option th:each="op_prd : ${products}" th:value="${op_prd.ipId}" th:text="${op_prd.cnName}">Wireframe</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td class="text-left">
+                                        <input type="text" class="input_lanauge" id="import_product_count" />
+                                    </td>
+                                    <td class="text-left">
+                                        <input type="text" class="input_lanauge" id="import_product_price" />
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 text-right">
+                                    <button type="button" class="btn btn-primary" id="import_product_new_btn">新增</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-2 sidebar">
+            <div class="pinned">
+                <div class="handwritten pinned-indicator">
+                    <button type="button" id="nav_return_btn" class="btn btn-primary" style="width:100%">点我返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="this_category_id" th:value="${this_category_id}" />
+</div>
+<strong id="tip"></strong>
+<script type='text/javascript' th:src="@{/js/admin/import_bydate.js}"></script>
+<script type='text/javascript' th:src="@{/js/common/jquery.pin.js}"></script>
+<script type='text/javascript' th:src="@{/js/common/bootstrap-select.js}"></script>
+<script language="JavaScript">
+    $(".pinned").pin({containerSelector: ".container", minWidth: 940});
+</script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

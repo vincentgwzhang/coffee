@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7;">
+    <h1>货物入货记录跟踪</h1>
+</div>
+
+<div class="container">
+    <div class="row .hidden-sm .hidden-xs">
+        <div class="col-md-10 col-lg-10">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class="table-success">
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">日期</th>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">总价钱</th>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">数量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="record,row : ${records}" class="active">
+                        <td>[[*{#calendars.format(record.date,'yyyy-MM-dd')}]]</td>
+                        <td>[[*{record.ihPrice}]]<input type="hidden" th:id="${'td_price_' + row.index}" th:value="*{record.ihPrice}" /> </td>
+                        <td>[[*{record.count}]]<input type="hidden" th:id="${'td_count_' + row.index}" th:value="*{record.count}" /></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                <tr class="table-success">
+                        <td>总进货：</td>
+                        <td id="td_total_price">0</td>
+                        <td id="td_total_count">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="col-md-2 col-lg-2 sidebar">
+            <div class="pinned">
+                <div class="handwritten pinned-indicator">
+                    <button type="button" id="nav_return_btn" class="btn btn-primary" style="width:100%">点我返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<strong id="tip"></strong>
+<script type='text/javascript' th:src="@{/js/common/jquery.pin.js}"></script>
+<script type='text/javascript' th:src="@{/js/admin/import_records.js}"></script>
+<script language="JavaScript">
+    $(".pinned").pin({containerSelector: ".container", minWidth: 940});
+</script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

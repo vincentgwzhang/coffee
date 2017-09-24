@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/menu_category.css}" />
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7; margin-bottom: 50px;">
+    <h1>进货物品项配置</h1>
+</div>
+
+<div class="container">
+    <div class="row .hidden-sm .hidden-xs">
+
+        <div class="col-md-12 col-lg-6" th:each="product : ${products}" th:id="${'product_div_' + product.ipId}">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="alert alert-success" th:id="${'product_save_' + product.ipId}">
+                        保存成功
+                    </div>
+                </div>
+                <div class="panel-body" >
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-md-2 col-lg-2 text-center">语言</th>
+                                <th class="col-md-10 col-lg-10">名称</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">中文</td>
+                                <td><input type="text" class="input_lanauge" th:id="${'product_lg_cn_' + product.ipId}" th:value="${product.cnName}" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">英文</td>
+                                <td><input type="text" class="input_lanauge" th:id="${'product_lg_en_' + product.ipId}" th:value="${product.enName}" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">西文</td>
+                                <td><input type="text" class="input_lanauge" th:id="${'product_lg_sp_' + product.ipId}" th:value="${product.spName}" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 text-left">
+                            <button type="button" class="btn btn-primary" th:id="${'product_trace_btn_' + product.ipId}">进货记录</button>
+                            <input type="checkbox" th:id="${'ck_countable_' + product.ipId}" data-toggle="toggle" data-on="可计算" data-off="不计算" th:checked="${product.ipCountable}" />
+                        </div>
+                        <div class="col-md-6 col-lg-6 text-right">
+                            <button type="button" class="btn btn-primary" th:id="${'product_save_btn_' + product.ipId}">保存</button>
+                            <button type="button" class="btn btn-danger" style="margin-left: 15px;" th:id="${'product_del_btn_' + product.ipId}">删除</button>
+                            <input type="hidden" th:id="${'product_import_value_' + product.ipId}" th:value='${#strings.unescapeJavaScript(product)}' />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-6" id="product_new_div">
+            <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body panel-info" >
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="col-md-2 col-lg-2 text-center">语言</th>
+                            <th class="col-md-10 col-lg-10">名称</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-center">中文</td>
+                            <td><input type="text" class="input_lanauge" id="product_new_lg_cn" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">英文</td>
+                            <td><input type="text" class="input_lanauge" id="product_new_lg_en" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">西文</td>
+                            <td><input type="text" class="input_lanauge" id="product_new_lg_sp" /></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 text-left">
+                            <input type="checkbox" id="ck_countable" data-toggle="toggle" data-on="可计算" data-off="不计算" />
+                        </div>
+                        <div class="col-md-6 col-lg-6 text-right">
+                            <button type="button" class="btn btn-primary" id="product_new_save_btn">新增</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type='text/javascript' th:src="@{/js/admin/import_products.js}"></script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

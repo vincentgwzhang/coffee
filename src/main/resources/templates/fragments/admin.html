@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:fragment="header-css-remove">
+        <!-- this is header-css -->
+        <script type='text/javascript' th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+
+        <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+        <script type='text/javascript' th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+    </div>
+</head>
+<body>
+<div th:fragment="navigation-bar">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">控制面板</a>
+            </div>
+            <div>
+                <p class="navbar-text navbar-right"><a th:href="@{/logout}">退出</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="navbar-text navbar-right"><a onclick="redirectWithLanguage('zh_CN');">中文</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="navbar-text navbar-right"><a onclick="redirectWithLanguage('en');">English</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="navbar-text navbar-right"><a onclick="redirectWithLanguage('es');">Español</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a th:href="@{/admin/menu/category}">菜单管理</a></li>
+                    <li><a th:href="@{/admin/desktop}">桌面管理</a></li>
+                    <li><a th:href="@{/admin/order/calendar}">订单管理</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span style="color: #777;">进货管理</span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/admin/importproduct/config}">进货物品项管理</a></li>
+                            <li><a th:href="@{/admin/importproduct/calendar}">进货记录管理</a></li>
+                        </ul>
+                    </li>
+                    <li><a th:href="@{/admin/statistics/orders}">收支状况</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</div>
+
+</body>
+</html>

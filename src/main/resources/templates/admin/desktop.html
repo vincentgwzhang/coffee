@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+    <div th:replace="fragments/admin :: navigation-bar"/>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" th:each="desktop : ${desktops}" th:id="${'desktop_top_' + desktop.deskNo}">
+                <div class="panel panel-default" th:id="${'desktop_div_' + desktop.deskNo}" th:class="*{hasValue}?'info':'active'">
+                    <div class="panel-heading">桌号：<span th:text="${desktop.deskNo}"></span></div>
+                    <div class="panel-body">
+                        <img th:src="@{/images/desktop.png}" class="img-responsive center-block" />
+                    </div>
+                    <div class="panel-footer">
+                        <input type="checkbox" th:id="${'desktop_' + desktop.deskNo}" data-toggle="toggle" data-on="已启用" data-off="已禁用" th:checked="${desktop.deskEnable}" />
+                        <input type="checkbox" th:id="${'desktop_occupied_' + desktop.deskNo}" data-toggle="toggle" data-on="有客人" data-off="空桌" th:checked="${desktop.deskOccupied}" />
+                        <button type="button" class="btn btn-danger pull-right" th:id="${'desktop_btn_del_' + desktop.deskNo}">删除</button>
+                        <input type="hidden" th:id="${'desktop_data_' + desktop.deskNo}" th:value='${#strings.unescapeJavaScript(desktop)}' />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="padding: 6px 15px;"><input type="number" id="desktop_new_desknumber" placeholder="桌号"></div>
+                    <div class="panel-body">
+                        <img th:src="@{/images/desktop.png}" class="img-responsive center-block" />
+                    </div>
+                    <div class="panel-footer">
+                        <input type="checkbox" id="desktop_new_enabled" data-toggle="toggle" data-on="已启用" data-off="已禁用" />
+                        <input type="checkbox" id="desktop_new_occupied" data-toggle="toggle" data-on="有客人" data-off="空桌" />
+                        <button type="button" class="btn btn-danger pull-right" th:id="desk_new_btn">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type='text/javascript' th:src="@{/js/admin/desktop.js}"></script>
+    <div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

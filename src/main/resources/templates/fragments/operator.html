@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="operator-header">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#" th:text="#{operator.common.header.nav.controlpannal}">控制面板</a>
+            </div>
+            <div>
+                <p class="navbar-text navbar-right"><a th:href="@{/logout}" th:text="#{operator.common.header.nav.exit}">退出</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="navbar-text navbar-right"><a onclick="redirectWithLanguage('zh_CN');">中文</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="navbar-text navbar-right"><a onclick="redirectWithLanguage('en');">English</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="navbar-text navbar-right"><a onclick="redirectWithLanguage('es');">Español</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a th:href="@{/operator/showdesktops}" th:text="#{operator.common.header.nav.desktop}">显示桌面</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</div>
+
+</body>
+</html>

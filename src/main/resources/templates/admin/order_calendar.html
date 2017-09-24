@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <script type='text/javascript' th:src="@{/js/common/bootstrap-datepicker.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datepicker.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/order_calendar.css}" />
+</head>
+<body>
+<div th:replace="fragments/admin :: navigation-bar"/>
+
+<div class="page-header, text-center" style="color: #337ab7;">
+    <h1>订单管理</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+            <div class="pinned">
+                <div id="slt_calendar"></div>
+                <p style="background-color: #d9edf7;">已调整</p>
+                <p style="background-color: #f5f5f5;">未操作</p>
+            </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+        <div class="col-xs-5 col-sm-5 col-md-9 col-lg-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">日期</th>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">调整前总额</th>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">调整后总额</th>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="day : ${dates}" th:object="${overviewWrapper.overviewWrapperList.get(day)}" th:class="*{hasValue}?'info':'active'">
+                        <td>[[${day}]]</td>
+                        <td th:if="*{hasValue}">[[*{orderAdjustmentOverviewDTO.oriTotal}]]</td><td th:unless="*{hasValue}">0</td>
+                        <td th:if="*{hasValue}">[[*{orderAdjustmentOverviewDTO.adjTotal}]]</td><td th:unless="*{hasValue}">0</td>
+                        <td>
+                            <button type="button" class="btn btn-success" th:id="${'btn_adjust_' + day}">调整</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<strong id="tip"></strong>
+<script type='text/javascript' th:src="@{/js/common/jquery.pin.js}"></script>
+<script type='text/javascript' th:src="@{/js/admin/order_calendar.js}"></script>
+<script language="JavaScript">
+    $(".pinned").pin({containerSelector: ".container", minWidth: 540});
+</script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

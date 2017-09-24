@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/counter/order.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/table.css}" />
+</head>
+<body>
+<div th:replace="fragments/counter :: counter-header"/>
+<div class='container'>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6" >[[#{operator.order.desktopnumber}]]：<span th:text="${deskNum}" id="span_desk_num" /></div>
+                        <div class="col-sm-6 col-md-6 col-lg-6">&nbsp;</div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class='selectedMenuItemDiv'>
+                        <table class="table table-hover" id="customer_selection_area">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%; text-align: center;">#</th>
+                                <th style="width: 75%; text-align: left;">[[#{operator.order.menuname}]]</th>
+                                <th style="width: 10%; text-align: left;">[[#{operator.order.count}]]</th>
+                                <th style="width: 10%; text-align: left;">[[#{operator.order.subtotal}]]</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="orderItem, orderIndex : ${orderItemDTOS}">
+                                <td th:text="${orderIndex.count}" align="center">index</td>
+                                <td th:id="${'td_remove_' + orderIndex.count}" th:switch="${language}">
+                                    <p th:text="*{orderItem.descEN}" th:case="'en'"></p>
+                                    <p th:text="*{orderItem.descCN}" th:case="'zh'"></p>
+                                    <p th:text="*{orderItem.descSP}" th:case="'es'"></p>
+                                </td>
+                                <td th:text="*{orderItem.count}">count</td>
+                                <!--
+                                在开发的时候要注意：在 reload 的时候，这里的 suffix 取的是 orderItem.orderItemId
+                                而在创建的时候，取的是 menu item id
+                                -->
+                                <td><span th:text="*{orderItem.price * orderItem.count}" th:id="${'span_subtotal_' + orderItem.orderItemId}"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <div>
+                        <p class="bg-primary" style="height:30px;font-size: 20px;">&nbsp;&nbsp;&nbsp;[[#{operator.order.ordertotal}]]: <span id="span_order_total">0</span></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6" style="text-align: left;">
+                            <button id="btn_close_order" class="btn btn-success btn-lg">[[#{counter.desktop.order.close}]]</button>
+                            <button id="btn_return" class="btn btn-success btn-lg btn_disppear">[[#{counter.desktop.order.btn.return}]]</button>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6" style="text-align: right;">
+                            <button id="btn_lost_order" class="btn btn-danger btn-lg">[[#{counter.desktop.order.lost}]]</button>
+                        </div>
+                    </div>
+
+                    <input id="hdn_customer_count" value="0" type="hidden" />
+                    <div class="alert alert-success" id="success-alert">
+                        [[#{operator.order.transferseuccess}]]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="hid_txt_select" th:value="#{operator.order.pleaseselect}" />
+<input type="hidden" id="hid_txt_send" th:value="#{operator.order.options.send}" />
+<input type="hidden" id="hid_txt_delete" th:value="#{operator.order.deleteselected}" />
+<input type="hidden" id="hid_txt_language" th:value="${local_language}" />
+<input type="hidden" id="hid_txt_confirm_remove" th:value="#{operator.order.deleteconfirm}" />
+<input type="hidden" id="hid_txt_order_request" th:value="#{counter.desktop.order.request}" />
+<input type="hidden" id="hid_txt_order_format" th:value="#{counter.desktop.order.reques.format}" />
+<input type="hidden" id="hid_txt_order_return" th:value="#{counter.desktop.order.return}" />
+<script type='text/javascript' th:src="@{/js/counter/order.js}"></script>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

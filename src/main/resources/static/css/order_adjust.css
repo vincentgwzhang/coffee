@@ -1,0 +1,25 @@
+.indicator_table {
+    width:100%;
+    margin: 0px;
+    padding:0px;
+    font-size: large;
+    text-align: center;
+}
+
+.indicator_td {
+    border-left: 1px grey solid;
+    border-right: 1px grey solid;
+    border-bottom: 1px grey solid;
+}
+
+.upt_order_item_txt {
+    width: 80px;
+    margin:0px;
+    padding:0px;
+    border:0px white solid;
+}
+
+.p_button {
+    margin-top: 20px;
+    text-align: center;
+}
