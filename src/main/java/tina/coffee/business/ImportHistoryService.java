@@ -10,9 +10,11 @@ import tina.coffee.Verifier.ImportHistoryVerifier;
 import tina.coffee.Verifier.ImportProductVerifier;
 import tina.coffee.data.model.ImportHistoryEntity;
 import tina.coffee.data.model.ImportHistorySummaryEntity;
+import tina.coffee.data.model.ImportProductCountEntity;
 import tina.coffee.data.model.ImportProductEntity;
 import tina.coffee.data.repository.ImportHistoryRepository;
 import tina.coffee.data.repository.ImportHistorySummaryRepository;
+import tina.coffee.data.repository.ImportProductCountRepository;
 import tina.coffee.data.repository.ImportProductRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.function.CalFunction;
@@ -34,6 +36,8 @@ public class ImportHistoryService {
 
     private final ImportProductRepository importProductRepository;
 
+    private final ImportProductCountRepository importProductCountRepository;
+
     private final ImportHistoryRepository repository;
 
     private final ImportHistorySummaryRepository summaryRepository;
@@ -41,9 +45,10 @@ public class ImportHistoryService {
     private final DozerMapper mapper;
 
     @Autowired
-    public ImportHistoryService(ImportProductRepository importProductRepository, ImportHistoryRepository repository, ImportHistorySummaryRepository summaryRepository, DozerMapper mapper) {
+    public ImportHistoryService(ImportProductCountRepository importProductCountRepository, ImportProductRepository importProductRepository, ImportHistoryRepository repository, ImportHistorySummaryRepository summaryRepository, DozerMapper mapper) {
         this.repository = repository;
         this.importProductRepository = importProductRepository;
+        this.importProductCountRepository = importProductCountRepository;
         this.summaryRepository = summaryRepository;
         this.mapper = mapper;
     }
@@ -87,6 +92,12 @@ public class ImportHistoryService {
         summaryEntity.setIhsPrice(summaryEntity.getIhsPrice().add(inputDTO.getIhPrice()));
         summaryRepository.save(summaryEntity);
 
+        Optional<ImportProductCountEntity> importProductCountEntityOptional = importProductCountRepository.findByImportProduct(importProductEntityOptional.get());
+        ImportProductCountEntity importProductCountEntity = importProductCountEntityOptional.orElse(new ImportProductCountEntity());
+        importProductCountEntity.setImportProduct(importProductEntityOptional.get());
+        importProductCountEntity.setCount(importProductCountEntity.getCount().add(new BigDecimal(inputDTO.getCount())));
+        importProductCountRepository.save(importProductCountEntity);
+
         entity = repository.save(entity);
         return mapper.map(entity, ImportHistoryDTO.class);
     }
@@ -108,7 +119,44 @@ public class ImportHistoryService {
         Optional<ImportHistoryEntity> entityOptional = repository.findByIhId(importHistoryDTO.getIhId());
         ImportHistoryVerifier.verifyIfImportHistoryExistOrThrow(entityOptional);
 
-        ImportHistoryEntity entity = entityOptional.get();
+        ImportHistoryEntity entity = entityOptional.get();// 最初的那个 Import_History
+        //before: check and update the import_product_count table
+        ImportProductEntity originalImportProduct = entity.getImportProduct();
+        int originalCount = entity.getCount();
+
+        ImportProductEntity updatedImportProduct  = importProductEntityOptional.get();
+        int updatedCount  = importHistoryDTO.getCount();
+
+        //identify if the same product
+        if(originalImportProduct.equals(updatedImportProduct)) {
+            Optional<ImportProductCountEntity> importProductCountEntityOptional = importProductCountRepository.findByImportProduct(originalImportProduct);
+            ImportProductCountEntity importProductCountEntity = importProductCountEntityOptional.orElse(new ImportProductCountEntity());
+            importProductCountEntity.setImportProduct(originalImportProduct);
+            BigDecimal oriProductCount = importProductCountEntity.getCount();
+            BigDecimal uptProductCount = new BigDecimal(importHistoryDTO.getCount());
+            BigDecimal lstProductCount = new BigDecimal(entity.getCount());
+            BigDecimal resultCount = oriProductCount.subtract(lstProductCount).add(uptProductCount);
+            importProductCountEntity.setCount(resultCount);
+            importProductCountRepository.save(importProductCountEntity);
+        } else {
+            Optional<ImportProductCountEntity> optOriIPCEntity = importProductCountRepository.findByImportProduct(originalImportProduct);
+            Optional<ImportProductCountEntity> optUptIPCEntity = importProductCountRepository.findByImportProduct(updatedImportProduct);
+
+            ImportProductCountEntity oriIPCEntity = optOriIPCEntity.orElse(new ImportProductCountEntity());
+            ImportProductCountEntity uptIPCEntity = optUptIPCEntity.orElse(new ImportProductCountEntity());
+
+            oriIPCEntity.setImportProduct(originalImportProduct);
+            uptIPCEntity.setImportProduct(updatedImportProduct);
+
+            oriIPCEntity.setCount(oriIPCEntity.getCount().subtract(new BigDecimal(originalCount)));
+            uptIPCEntity.setCount(uptIPCEntity.getCount().add(new BigDecimal(importHistoryDTO.getCount())));
+
+            importProductCountRepository.save(oriIPCEntity);
+            importProductCountRepository.save(uptIPCEntity);
+        }
+        //finish
+
+
         ImportHistorySummaryEntity summaryEntity = importHistorySummaryEntityOptional.get();
         entity.setIhPrice(importHistoryDTO.getIhPrice());
         entity.setCount(importHistoryDTO.getCount());
@@ -130,6 +178,14 @@ public class ImportHistoryService {
         repository.delete(id);
 
         ImportHistoryEntity entity = entityOptional.get();
+
+        Optional<ImportProductCountEntity> importProductCountEntityOptional = importProductCountRepository.findByImportProduct(entity.getImportProduct());
+        if(importProductCountEntityOptional.isPresent()) {
+            ImportProductCountEntity importProductCountEntity = importProductCountEntityOptional.get();
+            importProductCountEntity.setCount(importProductCountEntity.getCount().subtract(new BigDecimal(entity.getCount())));
+            importProductCountRepository.save(importProductCountEntity);
+        }
+
         ImportHistorySummaryEntity summaryEntity = entity.getImportHistorySummary();
         List<ImportHistoryEntity> entities = repository.findByImportHistorySummary(summaryEntity);
         if(entities.isEmpty()) {

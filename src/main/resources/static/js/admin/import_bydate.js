@@ -10,6 +10,11 @@ function pageInit() {
     bindDeleteBtn();
     bindAddBtn();
     bindReturnBtn();
+    hideTip();
+}
+
+function hideTip() {
+    $('div[id^="import_product_tip_"]').hide();
 }
 
 function bindCheckbox() {
@@ -82,8 +87,7 @@ function bindDeleteBtn() {
 function deleteImportProduct(event) {
     try {
         var sourceId = event.target.id;
-        var index = sourceId.lastIndexOf("_");
-        var id = sourceId.substring(index+1);
+        var id = getIdentity(sourceId);
         //Step 1: send AJAX
         $.ajax(
             {
@@ -158,7 +162,9 @@ function saveImportProduct(event) {
                         var resJson = JSON.stringify(data);
                         $(objHidden).attr("value", resJson);
 
-                        ShowMsg("保存成功");
+                        //show tip
+                        var tipID = changeToDestinationID(event.target.id, "#import_product_tip_");
+                        showTip(tipID);
                         reCalculateTotal();
                     }
                     catch(e){console.error(e);}
@@ -176,6 +182,12 @@ function saveImportProduct(event) {
     } catch (e) {
         handlerFrontEndException(e);
     }
+}
+
+function showTip(tipID) {
+    $(tipID).fadeTo(2000, 500).slideUp(500, function(){
+        $(tipID).slideUp(500);
+    });
 }
 
 function newImportProduct(event) {
@@ -210,7 +222,9 @@ function newImportProduct(event) {
                     try{
                         location.reload();
                     }
-                    catch(e){console.error(e);}
+                    catch(e){
+                        handlerFrontEndException(e);
+                    }
                 },
                 error: global_handler_ajax_exception
             }

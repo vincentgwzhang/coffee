@@ -11,6 +11,8 @@ import tina.coffee.Verifier.DesktopVerifier;
 import tina.coffee.Verifier.MenuVerifier;
 import tina.coffee.Verifier.OrderVerifier;
 import tina.coffee.data.model.DesktopEntity;
+import tina.coffee.data.model.ImportProductCountEntity;
+import tina.coffee.data.model.ImportProductEntity;
 import tina.coffee.data.model.MenuItemEntity;
 import tina.coffee.data.model.MenuQueueEntity;
 import tina.coffee.data.model.OrderEntity;
@@ -18,6 +20,7 @@ import tina.coffee.data.model.OrderItemEntity;
 import tina.coffee.data.model.OrderItemStatus;
 import tina.coffee.data.model.OrderType;
 import tina.coffee.data.repository.DesktopRepository;
+import tina.coffee.data.repository.ImportProductCountRepository;
 import tina.coffee.data.repository.MenuItemRepository;
 import tina.coffee.data.repository.MenuQueueRepository;
 import tina.coffee.data.repository.OrderItemRepository;
@@ -31,6 +34,7 @@ import tina.coffee.rest.dto.OrderItemDTO;
 import tina.coffee.system.exceptions.order.OrderNotOpenException;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +59,8 @@ public class OrderItemService {
 
     private final MenuQueueService menuQueueService;
 
+    private final ImportProductCountRepository importProductCountRepository;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -64,6 +70,7 @@ public class OrderItemService {
                             DesktopRepository desktopRepository,
                             MenuItemRepository menuItemRepository,
                             MenuQueueRepository menuQueueRepository,
+                            ImportProductCountRepository importProductCountRepository,
                             MenuQueueService menuQueueService,
                             OrderService orderService) {
         this.mapper = mapper;
@@ -76,6 +83,7 @@ public class OrderItemService {
         this.desktopRepository = desktopRepository;
         this.menuItemRepository = menuItemRepository;
         this.menuQueueRepository = menuQueueRepository;
+        this.importProductCountRepository = importProductCountRepository;
     }
 
     @Transactional
@@ -147,6 +155,27 @@ public class OrderItemService {
 //            }
 
             //menuQueueService.sendToChiefMonitor(entity);
+        }
+
+        updateImportProductCount(entity, count);
+    }
+
+    @Transactional
+    public void updateImportProductCount(OrderItemEntity entity, Integer count) {
+        List<ImportProductEntity> importProductEntities = entity.getMenuItem().getImportProducts();
+        if(importProductEntities.size()!=0) {
+            ImportProductEntity importProductEntity = importProductEntities.get(0);
+            if(importProductEntity.isIpCountable()){
+                Optional<ImportProductCountEntity> importProductCountEntityOptional = importProductCountRepository.findByImportProduct(importProductEntity);
+                if(importProductCountEntityOptional.isPresent()) {
+                    ImportProductCountEntity importProductCountEntity = importProductCountEntityOptional.get();
+                    BigDecimal originalValue = importProductCountEntity.getCount();
+                    BigDecimal deductValue   = new BigDecimal(count);
+                    importProductCountEntity.setCount(originalValue.subtract(deductValue));
+                    importProductCountRepository.save(importProductCountEntity);
+                }
+            }
+
         }
     }
 

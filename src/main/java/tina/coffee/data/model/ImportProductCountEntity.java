@@ -26,7 +26,7 @@ public class ImportProductCountEntity {
     private ImportProductEntity importProduct;
 
     @Column(name="ipc_count", nullable=false)
-    private BigDecimal count;
+    private BigDecimal count = BigDecimal.ZERO;
 
     public int getIpcId() {
         return ipcId;

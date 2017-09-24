@@ -25,7 +25,11 @@
             <div class="row" th:each="importedProduct : ${import_product_list}" th:id="${'import_product_top_' + importedProduct.ihId}">
                 <div class="col-md-12 col-lg-12">
                     <div class="panel panel-primary" th:id="${'import_product_div_' + importedProduct.ihId}">
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">
+                            <div class="alert alert-success" th:id="${'import_product_tip_' + importedProduct.ihId}">
+                                保存成功
+                            </div>
+                        </div>
                         <div class="panel-body panel-info" >
                             <table class="table table-hover">
                                 <thead>
