@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
@@ -27,6 +28,8 @@ public class ImportProductDTO {
 
     @NotNull
     private boolean ipCountable;
+
+    private BigDecimal count;
 
     @NotBlank
     private String cnName;
@@ -75,6 +78,14 @@ public class ImportProductDTO {
 
     public void setIpCountable(boolean ipCountable) {
         this.ipCountable = ipCountable;
+    }
+
+    public BigDecimal getCount() {
+        return count;
+    }
+
+    public void setCount(BigDecimal count) {
+        this.count = count;
     }
 
     @Override

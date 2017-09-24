@@ -92,11 +92,16 @@ function saveImportProduct(event) {
         var enName_id  = "#product_lg_en_" + ipId;
         var cnName_id  = "#product_lg_cn_" + ipId;
         var spName_id  = "#product_lg_sp_" + ipId;
+        var count_id  = "#product_count_" + ipId;
         var countable_id  = "#ck_countable_" + ipId;
 
         var descEN  = $(enName_id).val();
         var descCN  = $(cnName_id).val();
         var descSP  = $(spName_id).val();
+        var count  = $(count_id).val();
+        if(isEmpty(count)) {
+            count = 0;
+        }
 
         var countable   = $(countable_id).prop('checked');
 
@@ -107,6 +112,7 @@ function saveImportProduct(event) {
         product.spName = descSP;
         product.ipId = ipId;
         product.ipCountable = countable;
+        product.count = count;
 
         //Step 1: send AJAX
         $.ajax(
@@ -134,6 +140,7 @@ function saveImportProduct(event) {
                     $(enName_id).val(product.enName);
                     $(cnName_id).val(product.cnName);
                     $(spName_id).val(product.spName);
+                    $(count_id).val(product.count);
                 }
             }
         );
@@ -147,18 +154,25 @@ function newImportProduct(event) {
         var id_CN = "#product_new_lg_cn";
         var id_EN = "#product_new_lg_en";
         var id_SP = "#product_new_lg_sp";
+        var id_count = "#product_count";
         var id_countable = "#ck_countable";
 
         var cnName  = $(id_CN).val();
         var enName  = $(id_EN).val();
         var spName  = $(id_SP).val();
+        var count  = $(id_count).val();
         var countable   = $(id_countable).prop('checked');
+
+        if(isEmpty(count)) {
+            count = 0;
+        }
 
         var importProduct = new Object();
         importProduct.cnName = cnName;
         importProduct.enName = enName;
         importProduct.spName = spName;
         importProduct.ipCountable = countable;
+        importProduct.count = count;
 
         verifyBeforeSaveOrUpdateImportProduct(id_CN, id_EN, id_SP);
         if(validationMessages.length > 0) {

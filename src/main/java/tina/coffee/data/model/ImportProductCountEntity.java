@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name="import_product_count")
@@ -25,7 +26,7 @@ public class ImportProductCountEntity {
     private ImportProductEntity importProduct;
 
     @Column(name="ipc_count", nullable=false)
-    private int count;
+    private BigDecimal count;
 
     public int getIpcId() {
         return ipcId;
@@ -43,11 +44,11 @@ public class ImportProductCountEntity {
         this.importProduct = importProduct;
     }
 
-    public int getCount() {
+    public BigDecimal getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(BigDecimal count) {
         this.count = count;
     }
 

@@ -11,4 +11,8 @@ public interface ImportProductCountRepository extends JpaRepository<ImportProduc
 
     Optional<ImportProductCountEntity> findByImportProduct(ImportProductEntity importProduct);
 
+    Optional<ImportProductCountEntity> findByImportProductIpId(int ipId);
+
+    void deleteByImportProduct(ImportProductEntity importProduct);
+
 }

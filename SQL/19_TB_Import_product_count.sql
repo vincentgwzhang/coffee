@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `import_product_count`;
 CREATE TABLE `import_product_count`  (
   `ipc_id` int(11) NOT NULL AUTO_INCREMENT,
   `ipc_ip_id` int(11) NOT NULL,
-  `ipc_count` int(255) DEFAULT NULL,
+  `ipc_count` decimal(7,2) DEFAULT NULL,
   PRIMARY KEY (`ipc_id`) USING BTREE,
   KEY `ipc_ip_id` (`ipc_ip_id`),
   CONSTRAINT `ipc_fk_ip` FOREIGN KEY (`ipc_ip_id`) REFERENCES `import_product` (`ip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION

@@ -11,8 +11,10 @@ import tina.coffee.data.repository.ImportProductRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.rest.dto.ImportProductDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ImportProductService {
@@ -41,7 +43,17 @@ public class ImportProductService {
     @Transactional(readOnly = true)
     public List<ImportProductDTO> findAll() {
         List<ImportProductEntity> entities = repository.findAll();
-        return mapper.map(entities, ImportProductDTO.class);
+        List<ImportProductDTO> importProductDTOS = mapper.map(entities, ImportProductDTO.class);
+        importProductDTOS = importProductDTOS.stream().map(this::fullFillProductCount).collect(Collectors.toList());
+        return importProductDTOS;
+    }
+
+    private ImportProductDTO fullFillProductCount(ImportProductDTO dto) {
+        Optional<ImportProductCountEntity> entityOptional = importProductCountRepository.findByImportProductIpId(dto.getIpId());
+        if(entityOptional.isPresent()) {
+            dto.setCount(entityOptional.get().getCount());
+        }
+        return dto;
     }
 
     @Transactional
@@ -54,12 +66,10 @@ public class ImportProductService {
         ImportProductEntity entity = mapper.map(inputDTO, ImportProductEntity.class);
         entity = repository.save(entity);
 
-        if(inputDTO.isIpCountable()) {
-            ImportProductCountEntity countEntity = new ImportProductCountEntity();
-            countEntity.setImportProduct(entity);
-            countEntity.setCount(0);
-            importProductCountRepository.save(countEntity);
-        }
+        ImportProductCountEntity countEntity = new ImportProductCountEntity();
+        countEntity.setImportProduct(entity);
+        countEntity.setCount(inputDTO.getCount());
+        importProductCountRepository.save(countEntity);
 
         return mapper.map(entity, ImportProductDTO.class);
     }
@@ -68,6 +78,7 @@ public class ImportProductService {
     public void deleteImportProductById(Integer id) {
         Optional<ImportProductEntity> importProductEntityOptional = repository.findByIpId(id);
         ImportProductVerifier.verifyIfImportProductExistOrThrow(importProductEntityOptional);
+        importProductCountRepository.deleteByImportProduct(importProductEntityOptional.get());
         repository.deleteByIpId(id);
     }
 
@@ -84,16 +95,14 @@ public class ImportProductService {
         ImportProductEntity entity = mapper.map(inputDTO, ImportProductEntity.class);
         entity = repository.save(entity);
 
-        if(inputDTO.isIpCountable()) {
-            //check if has such count before, if has before, then no need to update
-            Optional<ImportProductCountEntity> EntityOptional = importProductCountRepository.findByImportProduct(entity);
-            if(!EntityOptional.isPresent()) {
-                ImportProductCountEntity countEntity = new ImportProductCountEntity();
-                countEntity.setImportProduct(entity);
-                countEntity.setCount(0);
-                importProductCountRepository.save(countEntity);
-            }
-        }
+        //check if has such count before, if has before, then no need to update
+        Optional<ImportProductCountEntity> EntityOptional = importProductCountRepository.findByImportProduct(entity);
+
+        ImportProductCountEntity countEntity = EntityOptional.orElse(new ImportProductCountEntity());
+        countEntity.setImportProduct(entity);
+        countEntity.setCount(inputDTO.getCount());
+        importProductCountRepository.save(countEntity);
+
         return mapper.map(entity, ImportProductDTO.class);
     }
 

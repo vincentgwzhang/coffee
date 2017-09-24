@@ -42,6 +42,10 @@
                                 <td class="text-center">西文</td>
                                 <td><input type="text" class="input_lanauge" th:id="${'product_lg_sp_' + product.ipId}" th:value="${product.spName}" /></td>
                             </tr>
+                            <tr>
+                                <td class="text-center">库存</td>
+                                <td><input type="text" class="input_lanauge" th:id="${'product_count_' + product.ipId}" th:value="${product.count}" /></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -84,6 +88,10 @@
                         <tr>
                             <td class="text-center">西文</td>
                             <td><input type="text" class="input_lanauge" id="product_new_lg_sp" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">库存</td>
+                            <td><input type="text" class="input_lanauge" id="product_count" value="0" /></td>
                         </tr>
                         </tbody>
                     </table>
