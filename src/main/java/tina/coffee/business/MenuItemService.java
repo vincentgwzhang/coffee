@@ -1,14 +1,17 @@
 package tina.coffee.business;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tina.coffee.Verifier.MenuVerifier;
+import tina.coffee.data.model.ImportProductEntity;
 import tina.coffee.data.model.MenuCategoryEntity;
 import tina.coffee.data.model.MenuItemEntity;
 import tina.coffee.data.model.MenuItemLanguageEntity;
 import tina.coffee.data.model.OrderEntity;
 import tina.coffee.data.model.OrderItemEntity;
+import tina.coffee.data.repository.ImportProductRepository;
 import tina.coffee.data.repository.MenuCategoryRepository;
 import tina.coffee.data.repository.MenuItemLanguageRepository;
 import tina.coffee.data.repository.MenuItemRepository;
@@ -39,6 +42,7 @@ public class MenuItemService {
     private final MenuCategoryRepository menuCategoryRepository;
     private final MenuItemLanguageRepository menuItemLanguageRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ImportProductRepository importProductRepository;
 
     private final DozerMapper mapper;
 
@@ -47,11 +51,13 @@ public class MenuItemService {
                            MenuCategoryRepository menuCategoryRepository,
                            MenuItemLanguageRepository menuItemLanguageRepository,
                            OrderItemRepository orderItemRepository,
+                           ImportProductRepository importProductRepository,
                            DozerMapper mapper) {
         this.repository = repository;
         this.menuCategoryRepository = menuCategoryRepository;
         this.menuItemLanguageRepository = menuItemLanguageRepository;
         this.orderItemRepository = orderItemRepository;
+        this.importProductRepository = importProductRepository;
         this.mapper = mapper;
     }
 
@@ -128,6 +134,9 @@ public class MenuItemService {
         MenuItemEntity itemEntity = mapper.map(menuItemDTO, MenuItemEntity.class);
         itemEntity.setMenuCategoryEntity(menuCategoryEntity.get());
 
+        //for binding import product
+        itemEntity = bindMenuItemWithImportProduct(itemEntity, menuItemDTO.getIpId());
+
         //save item in the end
         itemEntity = repository.save(itemEntity);
 
@@ -156,6 +165,9 @@ public class MenuItemService {
         MenuItemEntity entityToDB = mapper.map(menuItemDTO, MenuItemEntity.class);
         entityToDB.setMenuCategoryEntity(menuCategoryEntity.get());
 
+        //for binding import product
+        entityToDB = bindMenuItemWithImportProduct(entityToDB, menuItemDTO.getIpId());
+
         //save language first
         List<MenuItemLanguageEntity> languages = new ArrayList<>(entityToDB.getLanguages());
         menuItemLanguageRepository.save(languages);
@@ -163,6 +175,18 @@ public class MenuItemService {
         //save item in the end
         entityToDB = repository.save(entityToDB);
         return Optional.ofNullable(entityToDB).map(en -> mapper.map(en, MenuItemDTO.class)).orElseThrow(MenuItemUpdateException.newMenuCategoryCreateException());
+    }
+
+    private MenuItemEntity bindMenuItemWithImportProduct(MenuItemEntity entity, int importProductId) {
+        if(importProductId == -1) {
+            entity.setImportProducts(Lists.newArrayList());
+        } else {
+            Optional<ImportProductEntity> importProductEntityOptional = importProductRepository.findByIpId(importProductId);
+            if(importProductEntityOptional.isPresent()) {
+                entity.setImportProducts(Lists.newArrayList(importProductEntityOptional.get()));
+            }
+        }
+        return entity;
     }
 
     private void verifiyDescriptionNotDuplicateOrThrow(String languageDescription, MenuItemEntity entity) {

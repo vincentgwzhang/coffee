@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import tina.coffee.data.model.LanguageType;
 import tina.coffee.data.model.MenuItemEntity;
 import tina.coffee.dozer.convertor.BigDecimalConverter;
+import tina.coffee.dozer.convertor.MenuItemImportProductConvertor;
 import tina.coffee.dozer.convertor.MenuItemLanguageConvertor;
 import tina.coffee.rest.dto.MenuItemDTO;
 
@@ -42,6 +43,7 @@ public class MenuItemMappingProvider implements MappingProvider {
                 .fields("miEnable", "miEnable")
                 .fields("toChief", "toChief")
                 .fields("menuCategoryEntity.mcId", "miMcId")
+                .fields("importProducts", "ipId", customConverter(MenuItemImportProductConvertor.class))
                 .fields("miPrice", "miPrice", customConverter(BigDecimalConverter.class))
                 .fields(FIELD_LANGUAGE, "descEN", customConverter(MenuItemLanguageConvertor.class, LanguageType.ENGLISH.name()))
                 .fields(FIELD_LANGUAGE, "descCN", customConverter(MenuItemLanguageConvertor.class, LanguageType.CHINESE.name()))
@@ -61,6 +63,7 @@ public class MenuItemMappingProvider implements MappingProvider {
                         .fields("miPic", "miPic")
                         .fields("miEnable", "miEnable")
                         .fields("toChief", "toChief")
+                        .fields("ipId", "importProducts",  customConverter(MenuItemImportProductConvertor.class))
                         .fields("miPrice", "miPrice", customConverter(BigDecimalConverter.class))
                         .fields("descEN", FIELD_LANGUAGE, customConverter(MenuItemLanguageConvertor.class, LanguageType.ENGLISH.name()), collectionStrategy(false, RelationshipType.CUMULATIVE))
                         .fields("descSP", FIELD_LANGUAGE, customConverter(MenuItemLanguageConvertor.class, LanguageType.SPANISH.name()), collectionStrategy(false, RelationshipType.CUMULATIVE))

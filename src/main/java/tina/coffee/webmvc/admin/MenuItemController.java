@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import tina.coffee.business.ImportProductService;
 import tina.coffee.business.MenuCategoryService;
 import tina.coffee.business.MenuItemService;
+import tina.coffee.rest.dto.ImportProductDTO;
 import tina.coffee.rest.dto.MenuCategoryDTO;
 import tina.coffee.rest.dto.MenuItemDTO;
 
@@ -29,6 +31,9 @@ public class MenuItemController {
     private MenuItemService service;
 
     @Autowired
+    private ImportProductService importProductService;
+
+    @Autowired
     private MenuCategoryService menuCategoryService;
 
     @ModelAttribute("menuitems")
@@ -43,6 +48,12 @@ public class MenuItemController {
     public List<MenuCategoryDTO> findAllDesktop() {
         List<MenuCategoryDTO> categories = menuCategoryService.listAllCategories();
         return categories;
+    }
+
+    @ModelAttribute("importProducts")
+    public List<ImportProductDTO> findAllImportProducts() {
+        List<ImportProductDTO> importProductDTOS = importProductService.findAll();
+        return importProductDTOS;
     }
 
     @GetMapping

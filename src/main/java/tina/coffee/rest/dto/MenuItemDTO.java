@@ -21,7 +21,8 @@ import javax.xml.bind.annotation.XmlType;
                 "miPrice",
                 "descEN",
                 "descSP",
-                "descCN"
+                "descCN",
+                "ipId"
         }
 )
 @XmlRootElement(name="MenuItemDTO")
@@ -48,6 +49,9 @@ public class MenuItemDTO {
 
     @NotBlank
     private String descCN;
+
+    //直接与入货绑定
+    private int ipId;
 
     public int getMiId() {
         return miId;
@@ -119,6 +123,14 @@ public class MenuItemDTO {
 
     public void setToChief(boolean toChief) {
         this.toChief = toChief;
+    }
+
+    public int getIpId() {
+        return ipId;
+    }
+
+    public void setIpId(int ipId) {
+        this.ipId = ipId;
     }
 
     @Override

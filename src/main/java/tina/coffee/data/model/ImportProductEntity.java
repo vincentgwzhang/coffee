@@ -15,6 +15,7 @@ import javax.persistence.Table;
 public class ImportProductEntity {
 
     @Id
+    @Column(name="ip_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int ipId;
 

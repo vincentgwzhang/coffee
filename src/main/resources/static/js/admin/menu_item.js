@@ -7,6 +7,24 @@ function pageInit() {
     bindAddBtn();
     bindReturnBtn();
     hideTip();
+    prependAndRebindImportProduct();
+}
+
+function prependAndRebindImportProduct() {
+    $('#menu_item_import_product').prepend($('<option value="-1">--</option>'));
+    $('#menu_item_import_product').val(-1);
+
+    $('select[id^="menu_item_import_product_"]').prepend($('<option value="-1">--</option>'));
+    $('select[id^="menu_item_import_product_"]').each(function(index, value){
+        var selectID = $(value).prop("id");
+        var hiddenID = changeToDestinationID(selectID, "#menu_item_value_");
+        var menuItemJson = $(hiddenID).attr("value");
+        var menuItem = JSON.parse(menuItemJson);
+        var bindedImportProductID = menuItem.ipId;
+        if(bindedImportProductID==0) {
+            $(value).val(-1);
+        }
+    });
 }
 
 function hideTip() {
@@ -85,6 +103,7 @@ function saveMenuItem(event) {
         var descCN_id  = "#menu_item_lg_cn_" + miId;
         var descSP_id  = "#menu_item_lg_sp_" + miId;
         var miMc_id    = "#menu_item_cat_" + miId;
+        var bindImportProduct_id    = "#menu_item_import_product_" + miId;
 
         var enabled = $(enabled_id).prop('checked');
         var toChief = $(toChief_id).prop('checked');
@@ -93,6 +112,7 @@ function saveMenuItem(event) {
         var descCN  = $(descCN_id).val();
         var descSP  = $(descSP_id).val();
         var miMcId  = $(miMc_id).val();
+        var bindImportProductId  = $(bindImportProduct_id).val();
 
         verifyBeforeSaveOrUpdateMenuItem(descCN_id, descEN_id, descSP_id, miPrice_id);
         if(validationMessages.length > 0) {
@@ -106,6 +126,7 @@ function saveMenuItem(event) {
         menuItem.descCN = descCN;
         menuItem.descSP = descSP;
         menuItem.miMcId = miMcId;
+        menuItem.ipId = bindImportProductId;
 
         //Step 1: send AJAX
         $.ajax(
@@ -145,6 +166,11 @@ function saveMenuItem(event) {
                     $(descSP_id).val(menuItem.descSP);
                     $(enabled_id).prop('checked', menuItem.miEnable).change();
                     $(toChief_id).prop('checked', menuItem.toChief).change();
+                    if(menuItem.ipId==0){
+                        $(bindImportProductId).val(-1);
+                    } else {
+                        $(bindImportProductId).val(menuItem.ipId);
+                    }
                 }
             }
         );
@@ -167,6 +193,7 @@ function newMenuItem(event) {
         var descEN_id = "#new_menu_item_lg_en";
         var descSP_id = "#new_menu_item_lg_sp";
         var miPrice_id = "#new_menu_item_price";
+        var importProduct_id = "#menu_item_import_product";
 
         verifyBeforeSaveOrUpdateMenuItem(descCN_id, descEN_id, descSP_id, miPrice_id);
         if(validationMessages.length > 0) {
@@ -179,6 +206,7 @@ function newMenuItem(event) {
         var descEN  = $(descEN_id).val();
         var descCN  = $(descCN_id).val();
         var descSP  = $(descSP_id).val();
+        var importProduct  = $(importProduct_id).val();
 
         var menuItem = new Object();
         menuItem.miEnable = enabled;
@@ -189,6 +217,7 @@ function newMenuItem(event) {
         menuItem.descCN = descCN;
         menuItem.descSP = descSP;
         menuItem.miMcId = mcId;
+        menuItem.ipId = importProduct;
 
         //Step 1: send AJAX
         $.ajax(

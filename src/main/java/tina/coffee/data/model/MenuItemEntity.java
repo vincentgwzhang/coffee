@@ -12,10 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class MenuItemEntity {
 
     @Id
+    @Column(name = "mi_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int miId;
 
@@ -42,6 +46,12 @@ public class MenuItemEntity {
 
     @Column(name="mi_to_chief", nullable=false)
     private boolean toChief = true;
+
+    @ManyToMany
+    @JoinTable(name="menu_item_to_import_product",
+            joinColumns=@JoinColumn(name="mitip_mi_id", referencedColumnName="mi_id"),
+            inverseJoinColumns=@JoinColumn(name="mitip_ip_id", referencedColumnName="ip_id"))
+    private List<ImportProductEntity> importProducts;
 
     public Set<MenuItemLanguageEntity> getLanguages() {
         return languages;
@@ -107,6 +117,14 @@ public class MenuItemEntity {
         this.toChief = toChief;
     }
 
+    public List<ImportProductEntity> getImportProducts() {
+        return importProducts;
+    }
+
+    public void setImportProducts(List<ImportProductEntity> importProducts) {
+        this.importProducts = importProducts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,24 +133,28 @@ public class MenuItemEntity {
         return getMiId() == that.getMiId() &&
                 isMiEnable() == that.isMiEnable() &&
                 isToChief() == that.isToChief() &&
+                Objects.equal(getMenuCategoryEntity(), that.getMenuCategoryEntity()) &&
                 Objects.equal(getMiPic(), that.getMiPic()) &&
                 Objects.equal(getMiPrice(), that.getMiPrice()) &&
+                Objects.equal(getImportProducts(), that.getImportProducts()) &&
                 Objects.equal(getLanguages(), that.getLanguages());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getMiId(), getMiPic(), isMiEnable(), isToChief(), getMiPrice(), getLanguages());
+        return Objects.hashCode(getMiId(), getMenuCategoryEntity(), getMiPic(), isMiEnable(), getMiPrice(), isToChief(), getImportProducts(), getLanguages());
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("miId", miId)
+                .add("menuCategoryEntity", menuCategoryEntity)
                 .add("miPic", miPic)
                 .add("miEnable", miEnable)
-                .add("toChief", toChief)
                 .add("miPrice", miPrice)
+                .add("toChief", toChief)
+                .add("importProducts", importProducts)
                 .add("languages", languages)
                 .toString();
     }

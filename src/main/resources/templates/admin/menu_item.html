@@ -46,6 +46,14 @@
                                     <td><input type="text" class="input_lanauge" th:id="${'menu_item_lg_sp_' + menu.miId}" th:value="${menu.descSP}" /></td>
                                 </tr>
                                 <tr>
+                                    <td class="text-center">绑定</td>
+                                    <td>
+                                        <select class="selectpicker" data-style="btn-primary" th:id="${'menu_item_import_product_' + menu.miId}">
+                                            <option th:each="ip : ${importProducts}" th:value="${ip.ipId}" th:text="${ip.cnName}" th:selected="${ip.ipId}==${menu.ipId}">option choice</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td class="text-center">价钱</td>
                                     <td><input type="text" class="input_lanauge" th:id="${'menu_item_price_' + menu.miId}" th:value="${menu.miPrice}" /></td>
                                 </tr>
@@ -97,6 +105,14 @@
                                 <tr>
                                     <td class="text-center">西文</td>
                                     <td><input type="text" class="input_lanauge" th:id="${'new_menu_item_lg_sp'}" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">绑定</td>
+                                    <td>
+                                        <select class="selectpicker" data-style="btn-primary" id="menu_item_import_product">
+                                            <option th:each="ip : ${importProducts}" th:value="${ip.ipId}" th:text="${ip.cnName}">option choice</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="text-center">价钱</td>
