@@ -6,7 +6,7 @@ public class MenuCategoryBusinessException extends EntityBusinessException {
 
     private static final String errorMessageTmpl = "MenuCategoryBusinessException.message";
 
-    public MenuCategoryBusinessException(String errorMessage) {
+    public MenuCategoryBusinessException() {
         super(errorMessageTmpl, new Object[]{});
     }
 

@@ -192,14 +192,14 @@ public class MenuItemService {
     private void verifiyDescriptionNotDuplicateOrThrow(String languageDescription, MenuItemEntity entity) {
         List<MenuItemLanguageEntity> entities = menuItemLanguageRepository.findByMilDescriptionAndMenuItemEntityNot(languageDescription, entity);
         if(entities!=null && !entities.isEmpty()) {
-            throw new MenuItemLanguageBusinessException(MenuItemLanguageBusinessException.ERROR_MESSAGE_DUPLICATE);
+            throw new MenuItemLanguageBusinessException();
         }
     }
 
     private void verifiyDescriptionNotDuplicateOrThrow(String languageDescription) {
         List<MenuItemLanguageEntity> entities = menuItemLanguageRepository.findByMilDescription(languageDescription);
         if(entities!=null && !entities.isEmpty()) {
-            throw new MenuItemLanguageBusinessException(MenuItemLanguageBusinessException.ERROR_MESSAGE_DUPLICATE);
+            throw new MenuItemLanguageBusinessException();
         }
     }
 

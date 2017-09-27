@@ -12,7 +12,7 @@ public class ImportProductBusinessException extends EntityBusinessException {
         super(errorMessageTmpl, new Object[]{});
     }
 
-    public static Supplier<ImportProductBusinessException> newImportProductNotFoundException(String errorMessage) {
+    public static Supplier<ImportProductBusinessException> newImportProductNotFoundException() {
         return () -> new ImportProductBusinessException();
     }
 }

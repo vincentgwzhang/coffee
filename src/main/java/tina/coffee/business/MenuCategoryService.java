@@ -19,12 +19,9 @@ import tina.coffee.system.exceptions.menucategory.MenuCategoryCreateException;
 import tina.coffee.system.exceptions.menucategory.MenuCategoryUpdateException;
 import tina.coffee.system.exceptions.menucategorylanguage.MenuCategoryLanguageBusinessException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Service
 public class MenuCategoryService {
@@ -85,7 +82,7 @@ public class MenuCategoryService {
             //check if it still has menu category sub item
             List<MenuItemEntity> menuItemEntities = menuItemRepository.getMenuItemEntitiesByMenuCategoryEntity(entity.get());
             if(menuItemEntities != null && !menuItemEntities.isEmpty()) {
-                throw new MenuCategoryBusinessException(MenuCategoryBusinessException.EXCEPTION_MESSAGE_HAVING_MENU_ITEMS);
+                throw new MenuCategoryBusinessException();
             }
 
             deleteMenuCategoryLanguageEntitiesByMenuCategoryEntity(entity.get());
@@ -144,14 +141,14 @@ public class MenuCategoryService {
     private void verifiyDescriptionNotDuplicateOrThrow(String languageDescription) {
         List<MenuCategoryLanguageEntity> entities = languageRepository.findByMclDescription(languageDescription);
         if(entities != null && !entities.isEmpty()) {
-            throw new MenuCategoryLanguageBusinessException(MenuCategoryLanguageBusinessException.ERROR_MESSAGE_DUPLICATE);
+            throw new MenuCategoryLanguageBusinessException();
         }
     }
 
     private void verifiyDescriptionNotDuplicateOrThrow(String languageDescription, MenuCategoryEntity entity) {
         List<MenuCategoryLanguageEntity> entities = languageRepository.findByMclDescriptionAndMenuCategoryEntityNot(languageDescription, entity);
         if(entities != null && !entities.isEmpty()) {
-            throw new MenuCategoryLanguageBusinessException(MenuCategoryLanguageBusinessException.ERROR_MESSAGE_DUPLICATE);
+            throw new MenuCategoryLanguageBusinessException();
         }
     }
 }

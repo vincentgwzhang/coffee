@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static tina.coffee.system.exceptions.importproduct.ImportProductBusinessException.ERR_DUPLICATE;
-
 public class ImportProductVerifier {
 
     public static void verifyIfImportProductExistOrThrow(Optional<ImportProductEntity> importProductEntityOptional) {
@@ -25,7 +23,7 @@ public class ImportProductVerifier {
         Stream<String> spNameList = importProductEntityList.stream().filter(en -> en.getIpId()!=dto.getIpId()).map(ImportProductEntity::getSpName);
 
         Optional<String> duplicatedName = Streams.concat(cnNameList,enNameList,spNameList).filter(verifyIfImportProductDTOContains(dto)).findAny();
-        duplicatedName.ifPresent(str -> {throw new ImportProductBusinessException(ERR_DUPLICATE);});
+        duplicatedName.ifPresent(str -> {throw new ImportProductBusinessException();});
     }
 
     private static Predicate<String> verifyIfImportProductDTOContains(ImportProductDTO dto) {
