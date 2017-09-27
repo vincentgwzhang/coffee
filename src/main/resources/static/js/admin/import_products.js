@@ -52,12 +52,9 @@ function deleteMenuItem(event) {
                 dataType: "json",
                 type: "DELETE",
                 complete: function(xhr, statusText) {
-                    try{
-                        if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
-                            $("#product_div_" + id).remove();
-                        }
+                    if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
+                        $("#product_div_" + id).remove();
                     }
-                    catch(e){console.error(e);}
                 },
                 error: global_handler_ajax_exception
             }
@@ -131,7 +128,7 @@ function saveImportProduct(event) {
                         var tipID = changeToDestinationID(sourceId, "#product_save_");
                         showTip(tipID);
                     }
-                    catch(e){console.error(e);}
+                    catch(e){handlerFrontEndException(e);}
                 },
                 error: function handlerError(xhr, status, error) {
                     global_handler_ajax_exception(xhr, status, error);
@@ -188,10 +185,7 @@ function newImportProduct(event) {
                 type: "POST",
                 data:JSON.stringify(importProduct),
                 success: function(data) {
-                    try{
-                        location.reload();
-                    }
-                    catch(e){console.error(e);}
+                    location.reload();
                 },
                 error: global_handler_ajax_exception
             }

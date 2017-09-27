@@ -60,12 +60,9 @@ function deleteMenuItem(event) {
                 dataType: "json",
                 type: "DELETE",
                 complete: function(xhr, statusText) {
-                    try{
-                        if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
-                            $("#mi_top_" + id).remove();
-                        }
+                    if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
+                        $("#mi_top_" + id).remove();
                     }
-                    catch(e){console.error(e);}
                 },
                 error: global_handler_ajax_exception
             }
@@ -228,10 +225,7 @@ function newMenuItem(event) {
                 type: "POST",
                 data:JSON.stringify(menuItem),
                 success: function(data) {
-                    try{
-                        location.reload();
-                    }
-                    catch(e){console.error(e);}
+                    location.reload();
                 },
                 error: global_handler_ajax_exception
             }

@@ -36,12 +36,9 @@ function deleteMenuCategory(event) {
                 dataType: "json",
                 type: "DELETE",
                 complete: function(xhr, statusText) {
-                    try{
-                        if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
-                            $("#mc_top_" + id).remove();
-                        }
+                    if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
+                        $("#mc_top_" + id).remove();
                     }
-                    catch(e){console.error(e);}
                 },
                 error: global_handler_ajax_exception
             }
@@ -113,7 +110,7 @@ function saveMenuCategory(event) {
                         var tipID = changeToDestinationID(event.target.id, "#mc_tip_");
                         showTip2(tipID);
                     }
-                    catch(e){console.error(e);}
+                    catch(e){handlerFrontEndException(e);}
                 },
                 error: function handlerError(xhr, status, error) {
                     global_handler_ajax_exception(xhr, status, error);
@@ -163,10 +160,7 @@ function newMenuCategory(event) {
                 type: "POST",
                 data:JSON.stringify(menuCategory),
                 success: function(data) {
-                    try{
-                        location.reload();
-                    }
-                    catch(e){console.error(e);}
+                    location.reload();
                 },
                 error: global_handler_ajax_exception
             }

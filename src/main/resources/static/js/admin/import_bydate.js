@@ -167,7 +167,7 @@ function saveImportProduct(event) {
                         showTip(tipID);
                         reCalculateTotal();
                     }
-                    catch(e){console.error(e);}
+                    catch(e){handlerFrontEndException(e);}
                 },
                 error: function handlerError(xhr, status, error) {
                     global_handler_ajax_exception(xhr, status, error);
@@ -219,12 +219,7 @@ function newImportProduct(event) {
                 type: "POST",
                 data:JSON.stringify(newImportedProduct),
                 success: function(data) {
-                    try{
-                        location.reload();
-                    }
-                    catch(e){
-                        handlerFrontEndException(e);
-                    }
+                    location.reload();
                 },
                 error: global_handler_ajax_exception
             }

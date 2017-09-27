@@ -82,9 +82,7 @@ function markLostButton() {
                         window.location.href = myContextPath + PATH_COUNTER_DEFAULT;
                     }
                 },
-                error: function handlerError(xhr, status, error) {
-                    global_handler_ajax_exception(xhr, status, error);
-                }
+                error: global_handler_ajax_exception
             }
         );
     });

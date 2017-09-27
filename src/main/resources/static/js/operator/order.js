@@ -142,7 +142,6 @@ function btn_send_triggered(e) {
                     }
                     catch(e){
                         handlerFrontEndException(e);
-                        alert(e);
                     }
                 }
             },
@@ -217,13 +216,11 @@ function initSelect() {
             type: "GET",
             success: function(data) {
                 try{
-                    try{
-                        $('#desk_change').empty();
-                        renderOption(-1);
-                        $.each(data, function(index, value) {
-                            renderOption(value);
-                        });
-                    }catch(e){alert(e);}
+                    $('#desk_change').empty();
+                    renderOption(-1);
+                    $.each(data, function(index, value) {
+                        renderOption(value);
+                    });
                 }
                 catch(e){handlerFrontEndException(e);}
             },
@@ -271,9 +268,7 @@ function bindSelectEvent() {
                         showTip();
                     }
                 },
-                error: function handlerError(xhr, status, error) {
-                    global_handler_ajax_exception(xhr, status, error);
-                }
+                error: global_handler_ajax_exception
             }
         );
     });

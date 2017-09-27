@@ -26,10 +26,7 @@ function bindAddBtn() {
                 type: "POST",
                 data:JSON.stringify(newDesktop),
                 success: function(data) {
-                    try{
-                        location.reload();
-                    }
-                    catch(e){handlerFrontEndException(e);}
+                    location.reload();
                 },
                 error: global_handler_ajax_exception
             }
@@ -52,12 +49,9 @@ function bindDeleteBtn() {
                         dataType: "json",
                         type: "DELETE",
                         complete: function(xhr, statusText) {
-                            try{
-                                if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
-                                    $("#desktop_top_" + desktop.deskNo).remove();
-                                }
+                            if ( xhr.status == HTTP_STATUS_ACCEPTED ) {
+                                $("#desktop_top_" + desktop.deskNo).remove();
                             }
-                            catch(e){handlerFrontEndException(e);}
                         },
                         error: global_handler_ajax_exception
                     }
