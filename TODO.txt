@@ -102,7 +102,8 @@ TODO: 可以是各menu item 的成分进行分析
 
 
 TODO:
-1) 要计算剩下的可乐
+1) 所有JS 设计 AJAX 的，统一使用 global_handler_ajax_exception
+2) 打印机的问题
 
 
 native2ascii -encoding utf8 src.txt output.txt

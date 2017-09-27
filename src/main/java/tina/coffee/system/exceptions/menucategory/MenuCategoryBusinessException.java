@@ -4,10 +4,10 @@ import tina.coffee.system.exceptions.EntityBusinessException;
 
 public class MenuCategoryBusinessException extends EntityBusinessException {
 
-    public static final String EXCEPTION_MESSAGE_HAVING_MENU_ITEMS = "Menu category has sub menu items";
+    private static final String errorMessageTmpl = "MenuCategoryBusinessException.message";
 
     public MenuCategoryBusinessException(String errorMessage) {
-        super(errorMessage);
+        super(errorMessageTmpl, new Object[]{});
     }
 
 }

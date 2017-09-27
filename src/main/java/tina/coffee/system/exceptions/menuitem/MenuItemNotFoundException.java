@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 
 public class MenuItemNotFoundException extends EntityNotFoundException {
 
-    private static final String errorMessage = "Menu item is not exist";
+    private static final String errorMessageTmpl = "MenuItemNotFoundException.message";
 
     public MenuItemNotFoundException() {
-        super(errorMessage);
+        super(errorMessageTmpl, new Object[]{});
     }
 
     public static Supplier<MenuItemNotFoundException> newMenuItemNotFoundException() {

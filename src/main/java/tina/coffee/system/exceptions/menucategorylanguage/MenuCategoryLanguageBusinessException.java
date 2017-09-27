@@ -4,9 +4,9 @@ import tina.coffee.system.exceptions.EntityBusinessException;
 
 public class MenuCategoryLanguageBusinessException extends EntityBusinessException {
 
-    public static final String ERROR_MESSAGE_DUPLICATE = "menu category language duplicate";
+    private static final String errorMessageTmpl = "MenuCategoryLanguageBusinessException.message";
 
-    public MenuCategoryLanguageBusinessException(String errorMessage) {
-        super(errorMessage);
+    public MenuCategoryLanguageBusinessException() {
+        super(errorMessageTmpl, new Object[]{});
     }
 }

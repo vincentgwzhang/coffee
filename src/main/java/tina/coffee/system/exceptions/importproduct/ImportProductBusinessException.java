@@ -6,13 +6,13 @@ import java.util.function.Supplier;
 
 public class ImportProductBusinessException extends EntityBusinessException {
 
-    public static String ERR_DUPLICATE = "Already have such product, please check name if duplicate";
+    private static final String errorMessageTmpl = "ImportProductBusinessException.message";
 
-    public ImportProductBusinessException(String errorMessage) {
-        super(errorMessage);
+    public ImportProductBusinessException() {
+        super(errorMessageTmpl, new Object[]{});
     }
 
     public static Supplier<ImportProductBusinessException> newImportProductNotFoundException(String errorMessage) {
-        return () -> new ImportProductBusinessException(errorMessage);
+        return () -> new ImportProductBusinessException();
     }
 }

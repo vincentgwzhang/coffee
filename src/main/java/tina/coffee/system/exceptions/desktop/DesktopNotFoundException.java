@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 
 public class DesktopNotFoundException extends EntityNotFoundException {
 
-    private static final String errorMessage = "Desktop number %s not found";
+    private static final String errorMessageTpl = "DesktopNotFoundException.message";
 
     public DesktopNotFoundException(Integer desktopNumber) {
-        super(String.format(errorMessage, desktopNumber));
+        super(errorMessageTpl, new Object[]{desktopNumber});
     }
 
     public static Supplier<DesktopNotFoundException> newDesktopNotFoundException(Integer desktopNumber) {

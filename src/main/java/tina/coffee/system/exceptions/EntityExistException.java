@@ -10,6 +10,10 @@ public abstract class EntityExistException extends CoffeeGenericException {
     private final Status errorStatus = Status.CONFLICT;
     private final HttpStatus errorHttpStatus = HttpStatus.CONFLICT;
 
+    public EntityExistException(String errorMessageTpl, Object[] _parameters) {
+        super(errorMessageTpl, _parameters);
+    }
+
     public EntityExistException(String errorMessage){
         super(errorMessage);
     }

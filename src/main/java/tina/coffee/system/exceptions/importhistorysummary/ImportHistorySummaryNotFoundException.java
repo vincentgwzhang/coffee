@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 
 public class ImportHistorySummaryNotFoundException extends EntityNotFoundException {
 
-    private static String errorMessage = "Import history summary is not exist";
+    private static String errorMessageTmpl = "ImportHistorySummaryNotFoundException.message";
 
     public ImportHistorySummaryNotFoundException() {
-        super(errorMessage);
+        super(errorMessageTmpl, new Object[]{});
     }
 
     public static Supplier<ImportHistorySummaryNotFoundException> newImportHistorySummaryNotFoundException = () -> new ImportHistorySummaryNotFoundException();

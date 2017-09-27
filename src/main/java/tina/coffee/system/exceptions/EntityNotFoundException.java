@@ -11,6 +11,10 @@ public abstract class EntityNotFoundException extends CoffeeGenericException {
 
     private final HttpStatus errorHttpStatus = HttpStatus.NOT_FOUND;
 
+    public EntityNotFoundException(String errorMessageTpl, Object[] _parameters) {
+        super(errorMessageTpl, _parameters);
+    }
+
     public EntityNotFoundException(String errorMessage){
         super(errorMessage);
     }

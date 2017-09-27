@@ -3,6 +3,15 @@ package tina.coffee.system.exceptions.generic;
 @SuppressWarnings("serial")
 public class CoffeeGenericException extends RuntimeException{
 
+    private String messageTemplate;
+
+    private Object[] parameters;
+
+    public CoffeeGenericException(String messageTemplate, Object[] _parameters){
+        this.messageTemplate = messageTemplate;
+        this.parameters = _parameters;
+    }
+
     public CoffeeGenericException(){
         super();
     }
@@ -17,5 +26,13 @@ public class CoffeeGenericException extends RuntimeException{
 
     public CoffeeGenericException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public String getMessageTemplate() {
+        return messageTemplate;
+    }
+
+    public Object[] getParameters() {
+        return parameters;
     }
 }

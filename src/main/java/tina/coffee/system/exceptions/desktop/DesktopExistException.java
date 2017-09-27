@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 
 public class DesktopExistException extends EntityExistException {
 
-    private static final String errorMessage = "Desktop number %s already exist";
+    private static final String errorMessageTpl = "DesktopExistException.message";
 
     public DesktopExistException(Integer desktopNumber) {
-        super(String.format(errorMessage, desktopNumber));
+        super(errorMessageTpl, new Object[]{desktopNumber});
     }
 
     public static Supplier<DesktopExistException> newDesktopExistException(Integer desktopNumber) {

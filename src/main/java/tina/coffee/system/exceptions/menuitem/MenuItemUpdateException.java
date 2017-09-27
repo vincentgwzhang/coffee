@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 
 public class MenuItemUpdateException extends EntityBusinessException {
 
-    private static final String EXCEPTION_MESSAGE = "Menu item can not be updated";
+    private static final String errorMessageTmpl = "MenuItemUpdateException.message";
 
     public MenuItemUpdateException() {
-        super(EXCEPTION_MESSAGE);
+        super(errorMessageTmpl, new Object[]{});
     }
 
     public static Supplier<MenuItemUpdateException> newMenuCategoryCreateException() {

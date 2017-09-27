@@ -31,7 +31,21 @@ function getUrlParam(name) {
     if (r != null) return unescape(r[2]); return null; //返回参数值
 }
 
+/**
+ * xhr: {"readyState":4,"responseText":"","status":401,"statusText":"Unauthorized"}
+ */
 function global_handler_ajax_exception(xhr, status, error) {
+    bootbox.setLocale($("#hid_txt_language").val());
+    if(xhr.status == HTTP_STATUS_SHUTDOWN) {
+        bootbox.confirm($("#hid_txt_err_shutdown").val(), function(result){
+            window.location.href = global_getContextPath();
+        });
+    }
+
+    if(xhr.status == HTTP_STATUS_UNAUTHORIZED) {
+        window.location.href = global_getContextPath();
+    }
+
     if(xhr.status != HTTP_STATUS_ACCEPTED || xhr.status != HTTP_STATUS_NO_CONTENT) {
         bootbox.alert({
             title: "操作出错",
@@ -267,3 +281,5 @@ var PATH_COUNTER_DEFAULT = "/counter";
 
 var HTTP_STATUS_ACCEPTED=202;
 var HTTP_STATUS_NO_CONTENT=202;
+var HTTP_STATUS_UNAUTHORIZED=401;
+var HTTP_STATUS_SHUTDOWN=0;

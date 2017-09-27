@@ -6,12 +6,12 @@ import java.util.function.Supplier;
 
 public class DesktopNotAvailException extends EntityBusinessException {
 
-    public static final String REJECT_IS_DISABLED     = "desktop %s is disabled";
-    public static final String REJECT_IS_OCCUPIED     = "desktop %s has customer";
-    public static final String REJECT_IS_NOT_OCCUPIED = "desktop %s has no customer";
+    public static final String REJECT_IS_DISABLED     = "DesktopNotAvailException.REJECT_IS_DISABLED.message";
+    public static final String REJECT_IS_OCCUPIED     = "DesktopNotAvailException.REJECT_IS_OCCUPIED.message";
+    public static final String REJECT_IS_NOT_OCCUPIED = "DesktopNotAvailException.REJECT_IS_NOT_OCCUPIED.message";
 
-    public DesktopNotAvailException(String errorMessage, Integer desktopNumber) {
-        super(String.format(errorMessage, desktopNumber));
+    public DesktopNotAvailException(String errorMessageTpl, Integer desktopNumber) {
+        super(errorMessageTpl, new Object[]{desktopNumber});
     }
 
     public static Supplier<DesktopNotAvailException> newDesktopNotAvailException(String errorMessage, Integer desktopID) {

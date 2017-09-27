@@ -11,6 +11,10 @@ public abstract class EntityBusinessException extends CoffeeGenericException {
 
     private final HttpStatus errorHttpStatus = HttpStatus.BAD_REQUEST;
 
+    public EntityBusinessException(String messageTemplate, Object[] _parameters) {
+        super(messageTemplate, _parameters);
+    }
+
     public EntityBusinessException(String errorMessage){
         super(errorMessage);
     }
