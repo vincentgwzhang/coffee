@@ -2,17 +2,12 @@ package tina.coffee.system.exceptions.importproduct;
 
 import tina.coffee.system.exceptions.EntityBusinessException;
 
-import java.util.function.Supplier;
-
 public class ImportProductBusinessException extends EntityBusinessException {
 
-    private static final String errorMessageTmpl = "ImportProductBusinessException.message";
+    public static final String errorMessageNameTmpl = "ImportProductBusinessException.name.message";
+    public static final String errorMessageHistTmpl = "ImportProductBusinessException.history.message";
 
-    public ImportProductBusinessException() {
-        super(errorMessageTmpl, new Object[]{});
-    }
-
-    public static Supplier<ImportProductBusinessException> newImportProductNotFoundException() {
-        return () -> new ImportProductBusinessException();
+    public ImportProductBusinessException(String messageTemplate) {
+        super(messageTemplate, new Object[]{});
     }
 }

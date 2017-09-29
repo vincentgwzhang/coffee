@@ -41,9 +41,7 @@ function bindDeleteBtn() {
 
 function deleteMenuItem(event) {
     try {
-        var sourceId = event.target.id;
-        var index = sourceId.lastIndexOf("_");
-        var id = sourceId.substring(index+1);
+        var id = getIdentity(event.target.id);
         //Step 1: send AJAX
         $.ajax(
             {

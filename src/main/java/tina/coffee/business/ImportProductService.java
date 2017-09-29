@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tina.coffee.Verifier.ImportProductVerifier;
+import tina.coffee.data.model.ImportHistoryEntity;
 import tina.coffee.data.model.ImportProductCountEntity;
 import tina.coffee.data.model.ImportProductEntity;
+import tina.coffee.data.repository.ImportHistoryRepository;
 import tina.coffee.data.repository.ImportProductCountRepository;
 import tina.coffee.data.repository.ImportProductRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.rest.dto.ImportProductDTO;
+import tina.coffee.system.exceptions.importproduct.ImportProductBusinessException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,14 +26,18 @@ public class ImportProductService {
 
     private final ImportProductCountRepository importProductCountRepository;
 
+    private final ImportHistoryRepository importHistoryRepository;
+
     private final DozerMapper mapper;
 
     @Autowired
     public ImportProductService(ImportProductRepository repository,
                                 ImportProductCountRepository importProductCountRepository,
+                                ImportHistoryRepository importHistoryRepository,
                                 DozerMapper mapper) {
         this.repository = repository;
         this.importProductCountRepository = importProductCountRepository;
+        this.importHistoryRepository = importHistoryRepository;
         this.mapper = mapper;
     }
 
@@ -78,8 +85,20 @@ public class ImportProductService {
     public void deleteImportProductById(Integer id) {
         Optional<ImportProductEntity> importProductEntityOptional = repository.findByIpId(id);
         ImportProductVerifier.verifyIfImportProductExistOrThrow(importProductEntityOptional);
+        verifyIfImportProductHistoryExistAndThrow(importProductEntityOptional.get());
         importProductCountRepository.deleteByImportProduct(importProductEntityOptional.get());
         repository.deleteByIpId(id);
+    }
+
+    public void verifyIfImportProductHistoryExistAndThrow(ImportProductEntity entity) {
+        List<ImportHistoryEntity> importHistoryEntities = findImportProductHistoryByImportProduct(entity);
+        if(importHistoryEntities.size() > 0) {
+            throw new ImportProductBusinessException(ImportProductBusinessException.errorMessageHistTmpl);
+        }
+    }
+
+    public List<ImportHistoryEntity> findImportProductHistoryByImportProduct(ImportProductEntity entity) {
+        return importHistoryRepository.findByImportProductOrderByImportHistorySummaryIhsTimeDesc(entity);
     }
 
     @Transactional

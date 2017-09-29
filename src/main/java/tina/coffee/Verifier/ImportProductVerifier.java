@@ -23,7 +23,7 @@ public class ImportProductVerifier {
         Stream<String> spNameList = importProductEntityList.stream().filter(en -> en.getIpId()!=dto.getIpId()).map(ImportProductEntity::getSpName);
 
         Optional<String> duplicatedName = Streams.concat(cnNameList,enNameList,spNameList).filter(verifyIfImportProductDTOContains(dto)).findAny();
-        duplicatedName.ifPresent(str -> {throw new ImportProductBusinessException();});
+        duplicatedName.ifPresent(str -> {throw new ImportProductBusinessException(ImportProductBusinessException.errorMessageNameTmpl);});
     }
 
     private static Predicate<String> verifyIfImportProductDTOContains(ImportProductDTO dto) {
