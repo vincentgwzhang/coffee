@@ -49,15 +49,20 @@ public class MenuCategoryService {
         return mapper.map(entities, MenuCategoryDTO.class);
     }
 
+    public List<MenuCategoryDTO> listAllActiveCategories() {
+        List<MenuCategoryEntity> entities = repository.findByMcEnable(true);
+        return mapper.map(entities, MenuCategoryDTO.class);
+    }
+
     public List<MenuCategoryWithMenuItems> showMenu() {
-        List<MenuCategoryDTO> menuCategoryDTOS = listAllCategories();
+        List<MenuCategoryDTO> menuCategoryDTOS = listAllActiveCategories();
         List<MenuCategoryWithMenuItems> singleMenuCategories = mapper.map(menuCategoryDTOS, MenuCategoryWithMenuItems.class);
         singleMenuCategories.forEach(smc -> smc.setMenuItemDTOList(findMenuitemsAndFullfill(smc)));
         return singleMenuCategories;
     }
 
     private List<MenuItemDTO> findMenuitemsAndFullfill(MenuCategoryWithMenuItems menuCategoryWithItems) {
-        List<MenuItemEntity> menuItemEntities = menuItemRepository.getMenuItemEntitiesByMenuCategoryEntityMcId(menuCategoryWithItems.getMenuCategoryDTO().getMcId());
+        List<MenuItemEntity> menuItemEntities = menuItemRepository.findByMenuCategoryEntityMcIdAndMiEnable(menuCategoryWithItems.getMenuCategoryDTO().getMcId(),true);
         return mapper.map(menuItemEntities, MenuItemDTO.class);
     }
 

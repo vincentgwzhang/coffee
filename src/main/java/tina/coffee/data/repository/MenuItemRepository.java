@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface MenuItemRepository extends JpaRepository<MenuItemEntity, Integer> {
 
     List<MenuItemEntity> getMenuItemEntitiesByMenuCategoryEntity(MenuCategoryEntity entity);
-    List<MenuItemEntity> getMenuItemEntitiesByMenuCategoryEntityMcId(int mcId);
+    List<MenuItemEntity> findByMenuCategoryEntityMcIdAndMiEnable(int mcId, boolean isEnabled);
 
     void deleteByMenuCategoryEntity(MenuCategoryEntity entity);
 

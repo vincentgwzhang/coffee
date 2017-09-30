@@ -24,7 +24,7 @@ import java.util.Arrays;
  */
 public class PrinterFunction {
 
-    public static boolean print(File file) {
+    public static boolean print() {
 
         FileInputStream psStream = null;
         try {

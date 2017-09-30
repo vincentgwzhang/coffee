@@ -105,7 +105,7 @@ public class OrderService {
     public OrderDTO retrieveOpenOrderByDesktopNumber(Integer desktopNumber) {
         Optional<DesktopEntity> desktopEntity = desktopRepository.findByDeskNo(desktopNumber);
         DesktopVerifier.verifyIfDesktopNotExistAndThrow(desktopEntity, desktopNumber);
-        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityAndOrderType(desktopEntity.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityDeskNoAndOrderType(desktopEntity.get().getDeskNo(), OrderType.OPEN);
         return mapper.map(orderEntity.get(), OrderDTO.class);
     }
 
@@ -156,7 +156,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderDTO getOrderByDesktop(Integer desktopNumber) {
         Optional<DesktopEntity> desktopEntity = desktopRepository.findByDeskNo(desktopNumber);
-        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityAndOrderType(desktopEntity.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityDeskNoAndOrderType(desktopEntity.get().getDeskNo(), OrderType.OPEN);
         OrderVerifier.verifiyIfOrderExistOrThrow(orderEntity);
         return mapper.map(orderEntity.get(), OrderDTO.class);
     }
@@ -175,7 +175,7 @@ public class OrderService {
     @Transactional
     public void markLost(Integer desktopNumber) {
         Optional<DesktopEntity> desktopEntity = desktopRepository.findByDeskNo(desktopNumber);
-        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityAndOrderType(desktopEntity.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityDeskNoAndOrderType(desktopEntity.get().getDeskNo(), OrderType.OPEN);
         orderEntity.orElseThrow(() -> new RuntimeException("It is fine, order not found!"));
         OrderEntity entity = orderEntity.get();
         Set<OrderItemEntity> orderItemEntitySet = entity.getItems();
@@ -213,7 +213,7 @@ public class OrderService {
         Optional<DesktopEntity> desktopEntityOptional = desktopRepository.findByDeskNo(desktopNumber);
         DesktopVerifier.closeOrderProcedure(desktopEntityOptional, desktopNumber);
 
-        Optional<OrderEntity> orderEntityOptional = repository.findByDesktopEntityAndOrderType(desktopEntityOptional.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntityOptional = repository.findByDesktopEntityDeskNoAndOrderType(desktopEntityOptional.get().getDeskNo(), OrderType.OPEN);
         OrderVerifier.closeOrderProcedure(orderEntityOptional, desktopNumber);
 
         OrderEntity orderEntity = orderEntityOptional.get();
@@ -285,7 +285,7 @@ public class OrderService {
         Optional<DesktopEntity> desktopEntityOptional = desktopRepository.findByDeskNo(desktopNumber);
         DesktopVerifier.closeOrderProcedure(desktopEntityOptional, desktopNumber);
 
-        Optional<OrderEntity> orderEntityOptional = repository.findByDesktopEntityAndOrderType(desktopEntityOptional.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntityOptional = repository.findByDesktopEntityDeskNoAndOrderType(desktopEntityOptional.get().getDeskNo(), OrderType.OPEN);
         OrderVerifier.closeOrderProcedure(orderEntityOptional, desktopNumber);
 
         OrderEntity orderEntity = orderEntityOptional.get();
@@ -305,7 +305,7 @@ public class OrderService {
         DesktopVerifier.newCreateOrderProcedure(newDesktop, newDesktopNumber);
 
         //Move all order to new table
-        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityAndOrderType(oldDesktop.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntity = repository.findByDesktopEntityDeskNoAndOrderType(oldDesktop.get().getDeskNo(), OrderType.OPEN);
         OrderEntity entity = orderEntity.get();
         entity.setDesktopEntity(newDesktop.get());
         repository.save(entity);

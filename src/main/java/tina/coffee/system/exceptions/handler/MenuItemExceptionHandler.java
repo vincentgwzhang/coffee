@@ -30,7 +30,7 @@ public class MenuItemExceptionHandler {
 
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setHttpCode(ex.getErrorStatus().getStatusCode());
-        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setMessage(errorMessage);
         return new ResponseEntity<>(errorDTO, ex.getErrorHttpStatus());
     }
 
@@ -41,7 +41,7 @@ public class MenuItemExceptionHandler {
 
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setHttpCode(ex.getErrorStatus().getStatusCode());
-        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setMessage(errorMessage);
         return new ResponseEntity<>(errorDTO, ex.getErrorHttpStatus());
     }
 
@@ -52,7 +52,7 @@ public class MenuItemExceptionHandler {
 
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setHttpCode(ex.getErrorStatus().getStatusCode());
-        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setMessage(errorMessage);
         return new ResponseEntity<>(errorDTO, ex.getErrorHttpStatus());
     }
 
@@ -63,7 +63,7 @@ public class MenuItemExceptionHandler {
 
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setHttpCode(ex.getErrorStatus().getStatusCode());
-        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setMessage(errorMessage);
         return new ResponseEntity<>(errorDTO, ex.getErrorHttpStatus());
     }
 
@@ -74,7 +74,7 @@ public class MenuItemExceptionHandler {
 
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setHttpCode(ex.getErrorStatus().getStatusCode());
-        errorDTO.setMessage(ex.getMessage());
+        errorDTO.setMessage(errorMessage);
         return new ResponseEntity<>(errorDTO, ex.getErrorHttpStatus());
     }
 }

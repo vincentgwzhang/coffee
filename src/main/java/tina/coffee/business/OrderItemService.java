@@ -93,7 +93,7 @@ public class OrderItemService {
         Optional<DesktopEntity> desktopEntity = desktopRepository.findByDeskNo(desktopNumber);
         DesktopVerifier.appendExistOrderProcedure(desktopEntity, desktopNumber);
 
-        Optional<OrderEntity> orderEntity = orderRepository.findByDesktopEntityAndOrderType(desktopEntity.get(), OrderType.OPEN);
+        Optional<OrderEntity> orderEntity = orderRepository.findByDesktopEntityDeskNoAndOrderType(desktopEntity.get().getDeskNo(), OrderType.OPEN);
         orderEntity.orElseThrow(OrderNotOpenException.newOrderNotOpenException(desktopNumber));
 
         Optional<MenuItemEntity> menuItemEntity = menuItemRepository.findByMiId(menuitemId);

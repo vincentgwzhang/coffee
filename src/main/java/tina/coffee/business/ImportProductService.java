@@ -7,9 +7,11 @@ import tina.coffee.Verifier.ImportProductVerifier;
 import tina.coffee.data.model.ImportHistoryEntity;
 import tina.coffee.data.model.ImportProductCountEntity;
 import tina.coffee.data.model.ImportProductEntity;
+import tina.coffee.data.model.MenuItemToImportProductEntity;
 import tina.coffee.data.repository.ImportHistoryRepository;
 import tina.coffee.data.repository.ImportProductCountRepository;
 import tina.coffee.data.repository.ImportProductRepository;
+import tina.coffee.data.repository.MenuItemToImportProductRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.rest.dto.ImportProductDTO;
 import tina.coffee.system.exceptions.importproduct.ImportProductBusinessException;
@@ -28,16 +30,20 @@ public class ImportProductService {
 
     private final ImportHistoryRepository importHistoryRepository;
 
+    private final MenuItemToImportProductRepository menuItemToImportProductRepository;
+
     private final DozerMapper mapper;
 
     @Autowired
     public ImportProductService(ImportProductRepository repository,
                                 ImportProductCountRepository importProductCountRepository,
                                 ImportHistoryRepository importHistoryRepository,
+                                MenuItemToImportProductRepository menuItemToImportProductRepository,
                                 DozerMapper mapper) {
         this.repository = repository;
         this.importProductCountRepository = importProductCountRepository;
         this.importHistoryRepository = importHistoryRepository;
+        this.menuItemToImportProductRepository = menuItemToImportProductRepository;
         this.mapper = mapper;
     }
 
@@ -86,6 +92,7 @@ public class ImportProductService {
         Optional<ImportProductEntity> importProductEntityOptional = repository.findByIpId(id);
         ImportProductVerifier.verifyIfImportProductExistOrThrow(importProductEntityOptional);
         verifyIfImportProductHistoryExistAndThrow(importProductEntityOptional.get());
+        verifyIfImportProductMapToMenuItem(importProductEntityOptional.get());
         importProductCountRepository.deleteByImportProduct(importProductEntityOptional.get());
         repository.deleteByIpId(id);
     }
@@ -94,6 +101,13 @@ public class ImportProductService {
         List<ImportHistoryEntity> importHistoryEntities = findImportProductHistoryByImportProduct(entity);
         if(importHistoryEntities.size() > 0) {
             throw new ImportProductBusinessException(ImportProductBusinessException.errorMessageHistTmpl);
+        }
+    }
+
+    public void verifyIfImportProductMapToMenuItem(ImportProductEntity entity) {
+        List<MenuItemToImportProductEntity> entities = menuItemToImportProductRepository.findByImportProductEntity(entity);
+        if(entities.size() > 0) {
+            throw new ImportProductBusinessException(ImportProductBusinessException.errorMessageMenuTmpl);
         }
     }
 

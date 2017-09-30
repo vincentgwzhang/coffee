@@ -31,7 +31,7 @@ function bindTraceBtn() {
 
 function bindDeleteBtn() {
     $('button[id^="product_del_btn_"]').click(function(event) {
-        bootbox.confirm("确认删除该入货物品吗？（注意：如该入货物品已经有入货历史则无法删除）", function(result){
+        bootbox.confirm("确认删除该入货物品吗？", function(result){
             if(result) {
                 deleteMenuItem(event);
             }

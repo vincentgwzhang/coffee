@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 
-    Optional<OrderEntity> findByDesktopEntityAndOrderType(DesktopEntity entity, OrderType orderType);
+    Optional<OrderEntity> findByDesktopEntityDeskNoAndOrderType(int deskNo, OrderType orderType);
 
     Optional<OrderEntity> findByOrderId(Integer orderId);
 
