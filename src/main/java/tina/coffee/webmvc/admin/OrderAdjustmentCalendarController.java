@@ -56,6 +56,6 @@ public class OrderAdjustmentCalendarController {
 
     @GetMapping("calendar")
     public String orderCalendarPage(@RequestParam(name="date", required=false) String yearMonth, Model map) {
-        return "/admin/order_calendar";
+        return "admin/order_calendar";
     }
 }

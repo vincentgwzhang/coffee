@@ -31,7 +31,7 @@ public class DesktopController {
 
     @GetMapping("/desktop")
     public String desktopPage() {
-        return "/admin/desktop";
+        return "admin/desktop";
     }
 
 }

@@ -26,6 +26,6 @@ public class ImportProductController {
 
     @GetMapping
     public String showPage() {
-        return "/admin/import_product";
+        return "admin/import_product";
     }
 }

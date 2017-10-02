@@ -38,7 +38,7 @@ public class OrderAdjustmentController {
 
     @GetMapping("adjustment")
     public String orderAdjustPage() {
-        return "/admin/order_adjust";
+        return "admin/order_adjust";
     }
 
 }

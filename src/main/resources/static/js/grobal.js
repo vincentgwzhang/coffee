@@ -252,8 +252,10 @@ var REST_PATH_DESKTOP_CHANGE  = REST_PATH_ORDER + "/oldDesktopNumber/newDesktopN
 var REST_PATH_ORDER_MARK_LOST  = REST_PATH_ORDER + "/lost/desktopNumber";
 var REST_PATH_ORDER_MARK_CLEAR  = REST_PATH_ORDER + "/clear/desktopNumber";
 var REST_PATH_ORDER_MARK_CLOSE  = REST_PATH_ORDER + "/close/desktopNumber/actualPaid/p_actualPaid";
+var REST_PATH_ORDER_MARK_CLOSE_TAKE_AWAY  = REST_PATH_ORDER + "/close/takeaway";
 var REST_PATH_AVAIL_DESKTOP   = REST_PATH_DESKTOP + "/availDesks";
 var REST_PATH_ORDER_NEW_ITEM  = REST_PATH_ORDER_ITEM + "/desktopNumber/menuitemID/count";
+var REST_PATH_ORDER_TAKE_AWAY = REST_PATH_ORDER_ITEM + "/takeaway/menuitemID/count";
 
 //admin
 var PATH_MENU_ITEM = "/admin/menu/item";

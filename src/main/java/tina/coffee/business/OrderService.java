@@ -9,16 +9,23 @@ import org.springframework.transaction.annotation.Transactional;
 import tina.coffee.Verifier.DesktopVerifier;
 import tina.coffee.Verifier.OrderVerifier;
 import tina.coffee.data.model.DesktopEntity;
+import tina.coffee.data.model.ImportProductCountEntity;
+import tina.coffee.data.model.ImportProductEntity;
+import tina.coffee.data.model.MenuItemEntity;
 import tina.coffee.data.model.OrderEntity;
 import tina.coffee.data.model.OrderItemEntity;
 import tina.coffee.data.model.OrderItemStatus;
 import tina.coffee.data.model.OrderType;
 import tina.coffee.data.repository.DesktopRepository;
+import tina.coffee.data.repository.ImportProductCountRepository;
 import tina.coffee.data.repository.OrderItemRepository;
 import tina.coffee.data.repository.OrderRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.function.CalFunction;
+import tina.coffee.function.MenuItemFunction;
 import tina.coffee.function.OrderFunction;
+import tina.coffee.rest.dto.CloseOrderItemDTO;
+import tina.coffee.rest.dto.CloseTakeAwayDTO;
 import tina.coffee.rest.dto.OrderDTO;
 import tina.coffee.rest.dto.OrderStatisticsWrapper;
 import tina.coffee.system.exceptions.order.OrderCreateException;
@@ -52,6 +59,8 @@ public class OrderService {
 
     private final MenuQueueService menuQueueService;
 
+    private final ImportProductCountRepository importProductCountRepository;
+
     private static final int TAKE_AWAY_ORDER_DESKTOP_NUMBER = -1;
 
     @Autowired
@@ -60,6 +69,7 @@ public class OrderService {
                         MenuQueueService menuQueueService,
                         DesktopRepository desktopRepository,
                         OrderItemRepository orderItemRepository,
+                        ImportProductCountRepository importProductCountRepository,
                         MenuItemService menuItemService,
                         OrderRepository repository) {
         this.mapper = mapper;
@@ -67,6 +77,7 @@ public class OrderService {
         this.orderItemRepository = orderItemRepository;
         this.menuItemService = menuItemService;
         this.desktopRepository = desktopRepository;
+        this.importProductCountRepository = importProductCountRepository;
         this.desktopService = desktopService;
         this.menuQueueService = menuQueueService;
     }
@@ -274,6 +285,48 @@ public class OrderService {
         closeOrderInDB(desktopNumber, actualPaid);
         desktopService.updateDesktopOccupiedStatus(desktopNumber, false);
         sendOrderToMachine();
+    }
+
+    @Transactional
+    public void updateImportProductCount(MenuItemEntity entity, Integer count) {
+        List<ImportProductEntity> importProductEntities = entity.getImportProducts();
+        if(importProductEntities.size()!=0) {
+            ImportProductEntity importProductEntity = importProductEntities.get(0);
+            if(importProductEntity.isIpCountable()){
+                Optional<ImportProductCountEntity> importProductCountEntityOptional = importProductCountRepository.findByImportProduct(importProductEntity);
+                if(importProductCountEntityOptional.isPresent()) {
+                    ImportProductCountEntity importProductCountEntity = importProductCountEntityOptional.get();
+                    BigDecimal originalValue = importProductCountEntity.getCount();
+                    BigDecimal deductValue   = new BigDecimal(count);
+                    importProductCountEntity.setCount(originalValue.subtract(deductValue));
+                    importProductCountRepository.save(importProductCountEntity);
+                }
+            }
+
+        }
+    }
+
+    @Transactional
+    public void closeTakeAway(CloseTakeAwayDTO closeTakeAwayDTO) {
+        OrderDTO orderDTO = createNewOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER);
+        OrderEntity orderEntity = repository.findOne(orderDTO.getOrderId());
+
+        List<CloseOrderItemDTO> closeOrderItemDTOS = closeTakeAwayDTO.getOrderItemDTOList();
+        for(CloseOrderItemDTO closeOrderItemDTO : closeOrderItemDTOS) {
+            MenuItemEntity menuItemEntity = menuItemService.getMenuItemEntityById(closeOrderItemDTO.getMenuItemId());
+            int menuItemCount = closeOrderItemDTO.getCount();
+            OrderItemEntity orderItemEntity = MenuItemFunction.generateOrderItemEntity(orderEntity, menuItemEntity, menuItemCount);
+            orderItemRepository.save(orderItemEntity);
+
+            //update relative menu item relate
+            if(!menuItemEntity.isToChief()) {
+                updateImportProductCount(menuItemEntity, menuItemCount);
+            }
+        }
+
+        clearOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER);
+        closeOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER, closeTakeAwayDTO.getActualPrice());
+        //TODO: print it
     }
 
     private void sendOrderToMachine() {

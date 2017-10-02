@@ -50,7 +50,7 @@ public class ImportProductCalendarController {
 
     @GetMapping
     public String orderCalendarPage(@RequestParam(name="date", required=false) String yearMonth, Model map) {
-        return "/admin/import_calendar";
+        return "admin/import_calendar";
     }
 
 }

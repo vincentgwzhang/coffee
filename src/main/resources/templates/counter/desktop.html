@@ -18,7 +18,7 @@
                 <div class="panel-footer">
                     <input type="button" class="btn btn_disabled" th:if="${!op_desk.deskEnable}" th:id="${'op_desk_btn_disabled_' + op_desk.deskNo}" th:value="#{operator.desktop.disabled}" disabled="true" />
                     <input type="button" class="btn btn_occupied" th:if="${op_desk.deskOccupied}" th:id="${'op_desk_btn_occupied_' + op_desk.deskNo}" th:value="#{counter.desktop.order.close}" />
-                    <input type="button" class="btn btn_empty" th:if="${op_desk.deskEnable && !op_desk.deskOccupied}" th:id="${'op_desk_btn_open_' + op_desk.deskNo}" value="" />
+                    <input type="button" class="btn btn_empty" th:if="${op_desk.deskEnable && !op_desk.deskOccupied}" th:id="${'op_desk_btn_open_' + op_desk.deskNo}" value="&nbsp;" />
                     <input type="hidden" th:id="${'op_desk_data_' + op_desk.deskNo}" th:value='${#strings.unescapeJavaScript(op_desk)}' />
                 </div>
             </div>

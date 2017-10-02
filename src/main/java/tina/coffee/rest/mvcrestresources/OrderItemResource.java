@@ -50,6 +50,19 @@ public class OrderItemResource {
         return new ResponseEntity(ACCEPTED);
     }
 
+    /**
+     * 对于处理外卖的单子，不需要有任何桌子号，能发过来的，代表他是直接给厨师的。只要发给厨师就好
+     * @param menuitemId
+     * @param count
+     * @return
+     */
+    @PostMapping("takeaway/{menuitemID}/{count}")
+    public ResponseEntity orderNewTakeAwayItem(@NotNull @PathVariable("menuitemID") Integer menuitemId,
+                                               @NotNull @PathVariable("count") Integer count) {
+        service.orderTakeAwayItem(menuitemId, count);
+        return new ResponseEntity(ACCEPTED);
+    }
+
     @DeleteMapping("{orderItemId}")
     public ResponseEntity cancelOrderItem(@NotNull @PathVariable("orderItemId") Integer orderItemId) {
         service.cancelOrderItem(orderItemId);

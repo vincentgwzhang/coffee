@@ -38,7 +38,7 @@ public class IncomeStatisticsController {
 
     @GetMapping
     public String showPage() {
-        return "/admin/order_statistics";
+        return "admin/order_statistics";
     }
 
 }

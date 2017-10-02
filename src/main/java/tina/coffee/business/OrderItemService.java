@@ -156,13 +156,24 @@ public class OrderItemService {
 
             //menuQueueService.sendToChiefMonitor(entity);
         }
+        updateImportProductCount(entity.getMenuItem(), count);
+    }
 
-        updateImportProductCount(entity, count);
+    /**
+     * 判断是不是发给厨师的，对于是发给厨师的，就判断，打印
+     */
+    @Transactional
+    public void orderTakeAwayItem(Integer menuitemId, Integer count) {
+        MenuItemEntity entity = menuItemRepository.findOne(menuitemId);
+        if( entity.isToChief() ) {
+            //Print function
+            updateImportProductCount(entity, count);
+        }
     }
 
     @Transactional
-    public void updateImportProductCount(OrderItemEntity entity, Integer count) {
-        List<ImportProductEntity> importProductEntities = entity.getMenuItem().getImportProducts();
+    public void updateImportProductCount(MenuItemEntity entity, Integer count) {
+        List<ImportProductEntity> importProductEntities = entity.getImportProducts();
         if(importProductEntities.size()!=0) {
             ImportProductEntity importProductEntity = importProductEntities.get(0);
             if(importProductEntity.isIpCountable()){

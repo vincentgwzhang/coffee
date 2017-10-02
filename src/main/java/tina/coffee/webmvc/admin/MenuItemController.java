@@ -60,6 +60,6 @@ public class MenuItemController {
     public String menuCategoryPage(@RequestParam("mcId") Integer mcId, Model map) {
         logger.debug("{} triggered", "tina.coffee.webmvc.MenuItemController.menuCategoryPage");
         map.addAttribute("this_category_id", mcId);
-        return "/admin/menu_item";
+        return "admin/menu_item";
     }
 }

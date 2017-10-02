@@ -37,6 +37,6 @@ public class ImportProductSpeDayController {
 
     @GetMapping
     public String showPage() {
-        return "/admin/import_bydate";
+        return "admin/import_bydate";
     }
 }

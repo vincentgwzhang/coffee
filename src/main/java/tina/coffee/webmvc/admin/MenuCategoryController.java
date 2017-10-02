@@ -27,6 +27,6 @@ public class MenuCategoryController {
 
     @GetMapping
     public String menuCategoryPage() {
-        return "/admin/menu_category";
+        return "admin/menu_category";
     }
 }

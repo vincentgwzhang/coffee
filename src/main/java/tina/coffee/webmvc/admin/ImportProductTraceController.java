@@ -40,7 +40,7 @@ public class ImportProductTraceController {
 
     @GetMapping
     public String showPage() {
-        return "/admin/import_records";
+        return "admin/import_records";
     }
 
 }

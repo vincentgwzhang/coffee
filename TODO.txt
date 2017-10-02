@@ -102,8 +102,12 @@ TODO: 可以是各menu item 的成分进行分析
 
 
 TODO:
-1) 所有JS 设计 AJAX 的，统一使用 global_handler_ajax_exception
+1) 把上面的东西都测试一次
 2) 打印机的问题
+3) 在 iPAD 上面跑一次
+4) 授权 Counter 点餐，可以直接买单
+5) 独立模式的问题
+6) 非发给厨师的东西是不需要发送的
 
-
+在原有的基础上建立外卖模式，就是能立即出单的那种。就是operator 和 counter 的结合。直接选东西直接就出账单
 native2ascii -encoding utf8 src.txt output.txt

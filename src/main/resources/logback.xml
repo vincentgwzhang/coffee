@@ -29,7 +29,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="org.thymeleaf" level="error" additivity="false">
+    <logger name="org.thymeleaf" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
