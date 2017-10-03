@@ -32,6 +32,7 @@ import tina.coffee.system.exceptions.order.OrderCreateException;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -312,6 +313,7 @@ public class OrderService {
         OrderEntity orderEntity = repository.findOne(orderDTO.getOrderId());
 
         List<CloseOrderItemDTO> closeOrderItemDTOS = closeTakeAwayDTO.getOrderItemDTOList();
+        Set<OrderItemEntity> orderItemEntities = new HashSet<>();
         for(CloseOrderItemDTO closeOrderItemDTO : closeOrderItemDTOS) {
             MenuItemEntity menuItemEntity = menuItemService.getMenuItemEntityById(closeOrderItemDTO.getMenuItemId());
             int menuItemCount = closeOrderItemDTO.getCount();
@@ -322,7 +324,12 @@ public class OrderService {
             if(!menuItemEntity.isToChief()) {
                 updateImportProductCount(menuItemEntity, menuItemCount);
             }
+            orderItemEntities.add(orderItemEntity);
         }
+
+        orderEntity.setItems(orderItemEntities);
+        repository.save(orderEntity);
+
 
         clearOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER);
         closeOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER, closeTakeAwayDTO.getActualPrice());

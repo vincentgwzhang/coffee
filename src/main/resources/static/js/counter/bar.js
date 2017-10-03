@@ -32,8 +32,9 @@ function markCloseButton() {
 
                 var items = [];
                 $("#customer_selection_area > tbody > tr").each(function () {
+                    var item_count_id = $(this).find('select[id^="select_count_"]').prop("id");
                     var item_count = $(this).find('select[id^="select_count_"]').val();
-                    var item_id    = getIdentity(item_count);
+                    var item_id    = getIdentity(item_count_id);
 
                     var itemDTO = new Object();
                     itemDTO.menuItemId = item_id;
@@ -43,7 +44,7 @@ function markCloseButton() {
 
                 var takeAwayDTO = new Object();
                 takeAwayDTO.orderItemDTOList = items;
-                takeAwayDTO.actualPrice = acutalPaid;
+                takeAwayDTO.actualPrice = lastMark;
 
                 $.ajax(
                     {

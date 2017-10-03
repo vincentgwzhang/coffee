@@ -142,19 +142,7 @@ public class OrderItemService {
         orderService.refreshOrderPrice(entity.getOrder());
 
         if(entity.getMenuItem().isToChief()){
-            String itemName = "cococla";
-            int _count = 10;
-            String content =itemName + ":" + _count;
-
-//            try{
-//                File outputFile = File.createTempFile("example", ".txt");
-//                PrinterFunction.print(outputFile);
-//            }
-//            catch(Exception e) {
-//                logger.error(e.getMessage());
-//            }
-
-            //menuQueueService.sendToChiefMonitor(entity);
+            //TODO: update
         }
         updateImportProductCount(entity.getMenuItem(), count);
     }
@@ -166,7 +154,7 @@ public class OrderItemService {
     public void orderTakeAwayItem(Integer menuitemId, Integer count) {
         MenuItemEntity entity = menuItemRepository.findOne(menuitemId);
         if( entity.isToChief() ) {
-            //Print function
+            //TODO:Print function
             updateImportProductCount(entity, count);
         }
     }
