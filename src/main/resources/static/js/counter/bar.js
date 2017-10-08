@@ -44,7 +44,9 @@ function markCloseButton() {
 
                 var takeAwayDTO = new Object();
                 takeAwayDTO.orderItemDTOList = items;
-                takeAwayDTO.actualPrice = lastMark;
+                takeAwayDTO.actualPrice     = orderTotal.toFixed(2);
+                takeAwayDTO.customerPay     = acutalPaid.toFixed(2);
+                takeAwayDTO.customerReceive = returnTotal.toFixed(2);
 
                 $.ajax(
                     {

@@ -9,35 +9,35 @@ public class DefaultController {
 
     @GetMapping("/")
     public String home1() {
-        return "/home";
+        return "home";
     }
 
     @GetMapping("/home")
     public String home() {
-        return "/home";
+        return "home";
     }
 
     @Secured("ROLE_CHIEF")
     @GetMapping("/chief")
     public String chief() {
-        return "/chief";
+        return "chief";
     }
 
     @GetMapping("/about")
     public String about() {
         System.out.println("what happen? 2");
-        return "/about";
+        return "about";
     }
 
     @GetMapping("/login")
     public String login() {
         System.out.println("what happen? 1");
-        return "/login";
+        return "login";
     }
 
     @GetMapping("/accessdeny")
     public String error403() {
-        return "/error/403";
+        return "error/403";
     }
 
 }

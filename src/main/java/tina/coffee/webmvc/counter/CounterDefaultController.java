@@ -42,7 +42,7 @@ public class CounterDefaultController extends AbsController{
     @GetMapping
     public String showPage() {
         logger.debug("tina.coffee.webmvc.counter.CounterDefaultController.showPage triggered");
-        return "/counter/desktop";
+        return "counter/desktop";
     }
 
     @GetMapping("/closeDesk/{desknum}")

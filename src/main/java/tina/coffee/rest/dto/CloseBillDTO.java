@@ -7,36 +7,24 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.math.BigDecimal;
-import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
-        name = "CloseTakeAwayDTO",
+        name = "CloseBillDTO",
         propOrder = {
-                "orderItemDTOList",
                 "actualPrice",
                 "customerPay",
                 "customerReceive"
         }
 )
-@XmlRootElement(name="CloseTakeAwayDTO")
-public class CloseTakeAwayDTO {
-
-    private List<CloseOrderItemDTO> orderItemDTOList;
+@XmlRootElement(name="CloseBillDTO")
+public class CloseBillDTO {
 
     private BigDecimal actualPrice;
 
     private BigDecimal customerPay;
 
     private BigDecimal customerReceive;
-
-    public List<CloseOrderItemDTO> getOrderItemDTOList() {
-        return orderItemDTOList;
-    }
-
-    public void setOrderItemDTOList(List<CloseOrderItemDTO> orderItemDTOList) {
-        this.orderItemDTOList = orderItemDTOList;
-    }
 
     public BigDecimal getActualPrice() {
         return actualPrice;

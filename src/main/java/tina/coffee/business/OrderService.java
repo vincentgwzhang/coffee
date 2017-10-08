@@ -1,6 +1,7 @@
 package tina.coffee.business;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import tina.coffee.Verifier.OrderVerifier;
 import tina.coffee.data.model.DesktopEntity;
 import tina.coffee.data.model.ImportProductCountEntity;
 import tina.coffee.data.model.ImportProductEntity;
+import tina.coffee.data.model.LanguageType;
 import tina.coffee.data.model.MenuItemEntity;
 import tina.coffee.data.model.OrderEntity;
 import tina.coffee.data.model.OrderItemEntity;
@@ -24,11 +26,17 @@ import tina.coffee.dozer.DozerMapper;
 import tina.coffee.function.CalFunction;
 import tina.coffee.function.MenuItemFunction;
 import tina.coffee.function.OrderFunction;
+import tina.coffee.function.print.PrintItem;
+import tina.coffee.function.print.PrintItemFooterBuilder;
+import tina.coffee.function.print.PrintItemHeaderBuilder;
+import tina.coffee.function.print.PrinterFunction;
+import tina.coffee.rest.dto.CloseBillDTO;
 import tina.coffee.rest.dto.CloseOrderItemDTO;
 import tina.coffee.rest.dto.CloseTakeAwayDTO;
 import tina.coffee.rest.dto.OrderDTO;
 import tina.coffee.rest.dto.OrderStatisticsWrapper;
 import tina.coffee.system.exceptions.order.OrderCreateException;
+import tina.coffee.system.prop.UsbPrinterConfig;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -62,10 +70,13 @@ public class OrderService {
 
     private final ImportProductCountRepository importProductCountRepository;
 
+    private final UsbPrinterConfig usbPrinterConfig;
+
     private static final int TAKE_AWAY_ORDER_DESKTOP_NUMBER = -1;
 
     @Autowired
     public OrderService(DozerMapper mapper,
+                        UsbPrinterConfig usbPrinterConfig,
                         DesktopService desktopService,
                         MenuQueueService menuQueueService,
                         DesktopRepository desktopRepository,
@@ -75,6 +86,7 @@ public class OrderService {
                         OrderRepository repository) {
         this.mapper = mapper;
         this.repository = repository;
+        this.usbPrinterConfig = usbPrinterConfig;
         this.orderItemRepository = orderItemRepository;
         this.menuItemService = menuItemService;
         this.desktopRepository = desktopRepository;
@@ -281,11 +293,35 @@ public class OrderService {
         return mapper.map(orderEntity, OrderDTO.class);
     }
 
+    public void closeOrder(Integer desktopNumber, CloseBillDTO closeBillDTO) {
+        OrderEntity orderEntity = closeOrder(desktopNumber, closeBillDTO.getActualPrice());
+        printOrder(orderEntity, closeBillDTO);
+    }
+
+    private void printOrder(OrderEntity orderEntity, CloseBillDTO closeBillDTO) {
+        List<PrintItem> printItems = Lists.newArrayList();
+        Set<OrderItemEntity> orderItemEntities = orderEntity.getItems();
+        for(OrderItemEntity entity : orderItemEntities) {
+            String pi_name = entity.getMenuItem().getLanguages().stream().filter(mil-> mil.getLanguageType()==LanguageType.SPANISH).findFirst().get().getMilDescription();
+            String pi_unit = entity.getMenuItem().getMiPrice().toString();
+            String pi_count = String.valueOf(entity.getCount());
+            String pi_total = entity.getMenuItem().getMiPrice().multiply(BigDecimal.valueOf(Long.valueOf(String.valueOf(entity.getCount())))).toString();
+            printItems.add(new PrintItem(pi_name, pi_unit, pi_count, pi_total));
+        }
+
+        PrinterFunction.print(
+                PrintItemHeaderBuilder.buildHeader(orderEntity.getOrderId()),
+                PrintItemFooterBuilder.buildFooter(closeBillDTO.getActualPrice(), closeBillDTO.getCustomerPay(), closeBillDTO.getCustomerReceive()),
+                printItems,
+                usbPrinterConfig.getName()
+        );
+    }
+
     @Transactional
-    public void closeOrder(Integer desktopNumber, BigDecimal actualPaid) {
-        closeOrderInDB(desktopNumber, actualPaid);
+    public OrderEntity closeOrder(Integer desktopNumber, BigDecimal actualPaid) {
+        OrderEntity orderEntity = closeOrderInDB(desktopNumber, actualPaid);
         desktopService.updateDesktopOccupiedStatus(desktopNumber, false);
-        sendOrderToMachine();
+        return orderEntity;
     }
 
     @Transactional
@@ -314,6 +350,8 @@ public class OrderService {
 
         List<CloseOrderItemDTO> closeOrderItemDTOS = closeTakeAwayDTO.getOrderItemDTOList();
         Set<OrderItemEntity> orderItemEntities = new HashSet<>();
+        List<PrintItem> printItems = Lists.newArrayList();
+
         for(CloseOrderItemDTO closeOrderItemDTO : closeOrderItemDTOS) {
             MenuItemEntity menuItemEntity = menuItemService.getMenuItemEntityById(closeOrderItemDTO.getMenuItemId());
             int menuItemCount = closeOrderItemDTO.getCount();
@@ -325,23 +363,32 @@ public class OrderService {
                 updateImportProductCount(menuItemEntity, menuItemCount);
             }
             orderItemEntities.add(orderItemEntity);
+
+
+            String pi_name = menuItemEntity.getLanguages().stream().filter(mil -> mil.getLanguageType() == LanguageType.SPANISH).findFirst().get().getMilDescription();
+            String pi_unit = menuItemEntity.getMiPrice().toString();
+            String pi_count = String.valueOf(closeOrderItemDTO.getCount());
+            String pi_total = menuItemEntity.getMiPrice().multiply(BigDecimal.valueOf(Long.valueOf(String.valueOf(closeOrderItemDTO.getCount())))).toString();
+            printItems.add(new PrintItem(pi_name, pi_unit, pi_count, pi_total));
         }
 
         orderEntity.setItems(orderItemEntities);
-        repository.save(orderEntity);
+        orderEntity = repository.save(orderEntity);
 
 
         clearOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER);
         closeOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER, closeTakeAwayDTO.getActualPrice());
-        //TODO: print it
-    }
 
-    private void sendOrderToMachine() {
-        //TODO: must implement this ASAP
+        PrinterFunction.print(
+                PrintItemHeaderBuilder.buildHeader(orderEntity.getOrderId()),
+                PrintItemFooterBuilder.buildFooter(closeTakeAwayDTO.getActualPrice(), closeTakeAwayDTO.getCustomerPay(), closeTakeAwayDTO.getCustomerReceive()),
+                printItems,
+                usbPrinterConfig.getName()
+        );
     }
 
     @Transactional
-    public void closeOrderInDB(Integer desktopNumber, BigDecimal actualPaid) {
+    public OrderEntity closeOrderInDB(Integer desktopNumber, BigDecimal actualPaid) {
         Optional<DesktopEntity> desktopEntityOptional = desktopRepository.findByDeskNo(desktopNumber);
         DesktopVerifier.closeOrderProcedure(desktopEntityOptional, desktopNumber);
 
@@ -352,8 +399,7 @@ public class OrderService {
         orderEntity.setActualPrice(actualPaid);
         orderEntity.setEndTime(Calendar.getInstance());
         orderEntity.setOrderType(OrderType.CLOSE);
-        orderEntity.setActualPrice(actualPaid);
-        repository.save(orderEntity);
+        return repository.save(orderEntity);
     }
 
     @Transactional

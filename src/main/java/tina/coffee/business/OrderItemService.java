@@ -13,6 +13,7 @@ import tina.coffee.Verifier.OrderVerifier;
 import tina.coffee.data.model.DesktopEntity;
 import tina.coffee.data.model.ImportProductCountEntity;
 import tina.coffee.data.model.ImportProductEntity;
+import tina.coffee.data.model.LanguageType;
 import tina.coffee.data.model.MenuItemEntity;
 import tina.coffee.data.model.MenuQueueEntity;
 import tina.coffee.data.model.OrderEntity;
@@ -28,13 +29,15 @@ import tina.coffee.data.repository.OrderRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.dozer.providers.OrderItemMappingProvider;
 import tina.coffee.function.MenuItemFunction;
-import tina.coffee.function.PrinterFunction;
+import tina.coffee.function.print.SocketPrinter;
 import tina.coffee.rest.dto.OrderDTO;
 import tina.coffee.rest.dto.OrderItemDTO;
 import tina.coffee.system.exceptions.order.OrderNotOpenException;
+import tina.coffee.system.prop.SocketPrinterConfig;
 
-import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +66,8 @@ public class OrderItemService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private SocketPrinterConfig socketPrinterConfig;
+
     @Autowired
     public OrderItemService(DozerMapper mapper,
                             OrderItemRepository repository,
@@ -72,6 +77,7 @@ public class OrderItemService {
                             MenuQueueRepository menuQueueRepository,
                             ImportProductCountRepository importProductCountRepository,
                             MenuQueueService menuQueueService,
+                            SocketPrinterConfig socketPrinterConfig,
                             OrderService orderService) {
         this.mapper = mapper;
 
@@ -84,6 +90,7 @@ public class OrderItemService {
         this.menuItemRepository = menuItemRepository;
         this.menuQueueRepository = menuQueueRepository;
         this.importProductCountRepository = importProductCountRepository;
+        this.socketPrinterConfig = socketPrinterConfig;
     }
 
     @Transactional
@@ -142,9 +149,35 @@ public class OrderItemService {
         orderService.refreshOrderPrice(entity.getOrder());
 
         if(entity.getMenuItem().isToChief()){
-            //TODO: update
+            String menuName = entity.getMenuItem().getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.SPANISH).map(mi -> mi.getMilDescription()).findFirst().get();
+            printToChief(menuName, desktopNumber, count);
         }
         updateImportProductCount(entity.getMenuItem(), count);
+    }
+
+    private void printToChief(String menuName, Integer desktopNumber, Integer count) {
+        List<String> strList = new ArrayList<>();
+        strList.add("###############################################");
+        strList.add("Nombre: " + menuName);
+        if(desktopNumber != -1) {
+            strList.add("Número de escritorio: " + desktopNumber);
+        } else {
+            strList.add("Número de escritorio: Para llevar");
+        }
+
+        strList.add("Número de ejemplares: " + count);
+        strList.add("################################################");
+
+        try {
+            SocketPrinter printer = new SocketPrinter(socketPrinterConfig.getPrinterIP(), socketPrinterConfig.getPrinterPort());
+            printer.setJustification(0);
+            for(String content : strList) {
+                printer.printlnObj(content);
+            }
+            printer.feedAndCut();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -153,8 +186,11 @@ public class OrderItemService {
     @Transactional
     public void orderTakeAwayItem(Integer menuitemId, Integer count) {
         MenuItemEntity entity = menuItemRepository.findOne(menuitemId);
+
         if( entity.isToChief() ) {
-            //TODO:Print function
+            String menuName = entity.getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.SPANISH).map(mi -> mi.getMilDescription()).findFirst().get();
+            printToChief(menuName, -1, count);
+
             updateImportProductCount(entity, count);
         }
     }

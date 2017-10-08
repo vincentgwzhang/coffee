@@ -1,6 +1,5 @@
 package tina.coffee.test;
 
-import javax.print.PrintService;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,9 +9,8 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.util.Arrays;
 
-public class PrientExample1 implements Printable {
+public class Prient implements Printable {
 
     @Override
     public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
@@ -35,6 +33,7 @@ public class PrientExample1 implements Printable {
         g2d.drawString("-------------------------------------", 7, 145);
         g2d.drawString("*打印时间:" + "1111" + "*", 7, 160);
         g2d.drawString("店名：" + "11", 7, 175);
+
         return PAGE_EXISTS;
     }
 
@@ -56,22 +55,10 @@ public class PrientExample1 implements Printable {
         pf.setPaper(p);
 
         // 把 PageFormat 和 Printable 添加到书中，组成一个页面
-        book.append(new PrientExample1(), pf);
+        book.append(new Prient(), pf);
 
         // 获取打印服务对象
-        PrintService[] printServices = PrinterJob.lookupPrintServices();
-        PrintService target = null;
-        for(PrintService ps : printServices) {
-            if(ps.getName().equalsIgnoreCase("XP-80C")) {
-                target = ps;
-                break;
-            }
-        }
-
-
-
         PrinterJob job = PrinterJob.getPrinterJob();
-        //PrinterJob job = target.createPrintJob();
         job.setPageable(book);
         try {
             job.print();

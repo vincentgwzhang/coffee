@@ -30,6 +30,12 @@ function markCloseButton() {
                 var returnTotal = acutalPaid - orderTotal;
                 //clear order
                 var requestURL = REST_PATH_ORDER_MARK_CLEAR.replace(/desktopNumber/g, deskNumber);
+
+                var closeBillDTO = new Object();
+                closeBillDTO.actualPrice     = orderTotal;
+                closeBillDTO.customerPay     = acutalPaid;
+                closeBillDTO.customerReceive = returnTotal;
+
                 $.ajax(
                     {
                         url: myContextPath + requestURL,
@@ -37,13 +43,14 @@ function markCloseButton() {
                         dataType: "json",
                         type: "PUT",
                         complete: function(xhr, statusText) {
-                            requestURL = REST_PATH_ORDER_MARK_CLOSE.replace(/desktopNumber/g, deskNumber).replace(/p_actualPaid/g, lastMark);
+                            requestURL = REST_PATH_ORDER_MARK_CLOSE.replace(/desktopNumber/g, deskNumber);
                             $.ajax(
                                 {
                                     url: myContextPath + requestURL,
                                     contentType: "application/json; charset=utf-8",
                                     dataType: "json",
                                     type: "PUT",
+                                    data:JSON.stringify(closeBillDTO),
                                     complete: function(xhr, statusText) {
                                         if(returnTotal>0) {
                                             bootbox.alert($("#hid_txt_order_return").val() + " : " + returnTotal.toFixed(2))

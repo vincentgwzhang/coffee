@@ -42,7 +42,7 @@ public class OperatorController extends AbsController {
     @GetMapping("/showdesktops")
     public String operator() {
         logger.debug("tina.coffee.webmvc.operator.OperatorController.operator triggered");
-        return "/operator/desktop";
+        return "operator/desktop";
     }
 
     @GetMapping("/openDesk/{desknum}")

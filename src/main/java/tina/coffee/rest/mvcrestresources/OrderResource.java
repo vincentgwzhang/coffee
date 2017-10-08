@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tina.coffee.business.OrderItemService;
 import tina.coffee.business.OrderService;
+import tina.coffee.rest.dto.CloseBillDTO;
 import tina.coffee.rest.dto.CloseTakeAwayDTO;
 import tina.coffee.rest.dto.OrderDTO;
 
@@ -92,10 +93,10 @@ public class OrderResource {
     /**
      * 注意： 这个endpoint 才是close 的
      */
-    @PutMapping("close/{desktopNumber}/actualPaid/{actualPaid:.+}")
+    @PutMapping("close/{desktopNumber}")
     public ResponseEntity closeOrder(@NotNull @PathVariable("desktopNumber") Integer desktopNumber,
-                               @NotNull @PathVariable("actualPaid")BigDecimal actualPaid) {
-        service.closeOrder(desktopNumber, actualPaid);
+                                     @NotNull @RequestBody CloseBillDTO closeBillDTO) {
+        service.closeOrder(desktopNumber, closeBillDTO);
         return new ResponseEntity(ACCEPTED);
     }
 

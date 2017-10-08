@@ -58,6 +58,6 @@ public class OrderController extends AbsController{
         model.addAttribute("deskNum", orderDTO.getDesktopNumber());
         model.addAttribute("orderNum", orderNum);
         model.addAttribute("orderItemDTOS", orderItemDTOS);
-        return "/operator/order";
+        return "operator/order";
     }
 }

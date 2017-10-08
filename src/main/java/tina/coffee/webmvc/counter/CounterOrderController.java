@@ -47,7 +47,7 @@ public class CounterOrderController extends AbsController{
         model.addAttribute("deskNum", orderDTO.getDesktopNumber());
         model.addAttribute("orderNum", orderNum);
         model.addAttribute("orderItemDTOS", orderItemDTOS);
-        return "/counter/order";
+        return "counter/order";
     }
 
 }

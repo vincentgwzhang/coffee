@@ -58,7 +58,7 @@ public class BarController extends AbsController{
         List<MenuCategoryWithMenuItems> items = menuCategoryService.showMenu();
         model.addAttribute("menu", items);
 
-        return "/counter/bar";
+        return "counter/bar";
     }
 
 }
