@@ -74,7 +74,7 @@ public class DigestUtils {
 	}
 
 	public static void main(String[] args) {
-		String time = "1q2w3e4R";
+		String time = "tonyandtina";
 		String result = encodeSHA512Hex(time.getBytes());
 		System.out.println(time);
 		System.out.println(result);

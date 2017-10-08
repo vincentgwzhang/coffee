@@ -28,10 +28,12 @@ import tina.coffee.data.repository.OrderItemRepository;
 import tina.coffee.data.repository.OrderRepository;
 import tina.coffee.dozer.DozerMapper;
 import tina.coffee.dozer.providers.OrderItemMappingProvider;
+import tina.coffee.function.CalFunction;
 import tina.coffee.function.MenuItemFunction;
 import tina.coffee.function.print.SocketPrinter;
 import tina.coffee.rest.dto.OrderDTO;
 import tina.coffee.rest.dto.OrderItemDTO;
+import tina.coffee.system.config.SystemConstant;
 import tina.coffee.system.exceptions.order.OrderNotOpenException;
 import tina.coffee.system.prop.SocketPrinterConfig;
 
@@ -149,7 +151,7 @@ public class OrderItemService {
         orderService.refreshOrderPrice(entity.getOrder());
 
         if(entity.getMenuItem().isToChief()){
-            String menuName = entity.getMenuItem().getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.SPANISH).map(mi -> mi.getMilDescription()).findFirst().get();
+            String menuName = entity.getMenuItem().getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.CHINESE).map(mi -> mi.getMilDescription()).findFirst().get();
             printToChief(menuName, desktopNumber, count);
         }
         updateImportProductCount(entity.getMenuItem(), count);
@@ -157,7 +159,10 @@ public class OrderItemService {
 
     private void printToChief(String menuName, Integer desktopNumber, Integer count) {
         List<String> strList = new ArrayList<>();
+        strList.add("");
+        strList.add("");
         strList.add("###############################################");
+        strList.add("Timpo: " + CalFunction.getCurrentTime(SystemConstant.LONG_DATE_FORMAT));
         strList.add("Nombre: " + menuName);
         if(desktopNumber != -1) {
             strList.add("Número de escritorio: " + desktopNumber);
@@ -167,6 +172,8 @@ public class OrderItemService {
 
         strList.add("Número de ejemplares: " + count);
         strList.add("################################################");
+        strList.add("");
+        strList.add("");
 
         try {
             SocketPrinter printer = new SocketPrinter(socketPrinterConfig.getPrinterIP(), socketPrinterConfig.getPrinterPort());

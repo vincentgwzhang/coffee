@@ -38,6 +38,11 @@ public class CalFunction {
         return list;
     }
 
+    public static String getCurrentTime(String template) {
+        SimpleDateFormat dateformat = new SimpleDateFormat(template);
+        return dateformat.format(Calendar.getInstance().getTime());
+    }
+
     public static Date stringToDate(String template, String dateString) {
         return new Date(stringToCalendar(template, dateString).getTimeInMillis());
     }
