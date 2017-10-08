@@ -160,7 +160,6 @@ public class OrderItemService {
     private void printToChief(String menuName, Integer desktopNumber, Integer count) {
         List<String> strList = new ArrayList<>();
         strList.add("");
-        strList.add("");
         strList.add("###############################################");
         strList.add("Timpo: " + CalFunction.getCurrentTime(SystemConstant.LONG_DATE_FORMAT));
         strList.add("Nombre: " + menuName);
@@ -172,7 +171,6 @@ public class OrderItemService {
 
         strList.add("Número de ejemplares: " + count);
         strList.add("################################################");
-        strList.add("");
         strList.add("");
 
         try {
