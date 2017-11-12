@@ -17,26 +17,13 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @PropertySource("classpath:SystemConfig.properties")
 public class CoffeeServerConfig {
-    private static final String SERVLET_NAME = "coffee";
-    private static final String SERVLET_CONTEXT = "/coffee/*";
-
-    @Autowired
-    private ResourceConfig resourceConfig;
-
-    @Bean
-    public ServletRegistrationBean jerseyServlet(){
-        ServletRegistrationBean jerseyServlet = new ServletRegistrationBean(
-                new ServletContainer(resourceConfig),SERVLET_CONTEXT);
-        jerseyServlet.setName(SERVLET_NAME);
-        jerseyServlet.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return jerseyServlet;
-    }
 
     @Bean
     public JettyEmbeddedServletContainerFactory jettyServletContainer(
             @Value("${Jetty.Thread.max}") Integer jettyThreadMax,
             @Value("${Jetty.Thread.min}") Integer jettyThreadMin,
             @Value("${server.session-timeout}") Integer sessionTimeout,
+            @Value("${server.contextPath}") String contextPath,
             @Value("${server.port}") Integer port){
         final JettyEmbeddedServletContainerFactory servletContainerFactory = new JettyEmbeddedServletContainerFactory(port);
         servletContainerFactory.addServerCustomizers(
@@ -45,8 +32,9 @@ public class CoffeeServerConfig {
                     threadPool.setMaxThreads(jettyThreadMax);
                     threadPool.setMinThreads(jettyThreadMin);
                 });
-        servletContainerFactory.setSessionTimeout(sessionTimeout, TimeUnit.MINUTES);
+        servletContainerFactory.setSessionTimeout(sessionTimeout, TimeUnit.DAYS);
         servletContainerFactory.setRegisterDefaultServlet(false);
+        servletContainerFactory.setContextPath(contextPath);
         return servletContainerFactory;
     }
 }
