@@ -193,7 +193,7 @@ public class OrderItemService {
         MenuItemEntity entity = menuItemRepository.findOne(menuitemId);
 
         if( entity.isToChief() ) {
-            String menuName = entity.getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.SPANISH).map(mi -> mi.getMilDescription()).findFirst().get();
+            String menuName = entity.getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.CHINESE).map(mi -> mi.getMilDescription()).findFirst().get();
             printToChief(menuName, -1, count);
 
             updateImportProductCount(entity, count);

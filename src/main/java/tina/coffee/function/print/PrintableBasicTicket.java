@@ -60,8 +60,8 @@ public class PrintableBasicTicket implements Printable {
 
 
         // Set title
-        g2.drawString("CAN.", (float) x, (float) y + line);
-        g2.drawString("DESCRIPTION", (float) x + 30, (float) y + line);
+        g2.drawString("DESCRIPTION", (float) x, (float) y + line);
+        g2.drawString("CAN.", (float) x + 90, (float) y + line);
         g2.drawString("PRE.", (float) x + 120, (float) y + line);
         g2.drawString("SUMA", (float) x + 150, (float) y + line);
         line += heigth;
@@ -74,8 +74,8 @@ public class PrintableBasicTicket implements Printable {
         // Iterate goods
         if (printItems != null && printItems.size() > 0) {
             for (PrintItem gdf : printItems) {
-                g2.drawString(gdf.getCount(), (float) x, (float) y + line);
-                g2.drawString(gdf.getName(), (float) x + 30, (float) y + line);
+                g2.drawString(gdf.getName().substring(0,16), (float) x, (float) y + line);
+                g2.drawString(gdf.getCount(), (float) x + 90, (float) y + line);
                 g2.drawString(gdf.getUnitPrice(), (float) x + 120, (float) y + line);
                 g2.drawString(gdf.getTotalPrice(), (float) x + 150, (float) y + line);
                 line += heigth;
@@ -115,7 +115,7 @@ public class PrintableBasicTicket implements Printable {
         BigDecimal taxAmount = beforeTax.multiply(BigDecimal.valueOf(IVA_RATE)).setScale(2, RoundingMode.HALF_UP);
 
         g2.drawString(beforeTax.toString(), (float) x + 0, (float) y + line);
-        g2.drawString(String.valueOf(IVA_RATE) + "%", (float) x + 60, (float) y + line);
+        g2.drawString(String.valueOf(IVA_RATE * 100) + "%", (float) x + 60, (float) y + line);
         g2.drawString(taxAmount.toString(), (float) x + 120, (float) y + line);
         g2.drawString(totalPrice.toString(), (float) x + 150, (float) y + line);
         line += heigth;

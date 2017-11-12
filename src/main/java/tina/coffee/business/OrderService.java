@@ -310,8 +310,8 @@ public class OrderService {
         }
 
         PrinterFunction.print(
-                PrintItemHeaderBuilder.buildHeader(orderEntity.getOrderId(), orderEntity.getDesktopEntity().getDeskNo()),
-                PrintItemFooterBuilder.buildFooter(closeBillDTO.getActualPrice(), closeBillDTO.getCustomerPay(), closeBillDTO.getCustomerReceive()),
+                PrintItemHeaderBuilder.buildHeader(),
+                PrintItemFooterBuilder.buildFooter(orderEntity.getOrderId(), orderEntity.getDesktopEntity().getDeskNo()),
                 printItems,
                 usbPrinterConfig.getName(),
                 orderEntity.getTotalPrice()
@@ -381,8 +381,8 @@ public class OrderService {
         closeOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER, closeTakeAwayDTO.getActualPrice());
 
         PrinterFunction.print(
-                PrintItemHeaderBuilder.buildHeader(orderEntity.getOrderId(), TAKE_AWAY_ORDER_DESKTOP_NUMBER),
-                PrintItemFooterBuilder.buildFooter(closeTakeAwayDTO.getActualPrice(), closeTakeAwayDTO.getCustomerPay(), closeTakeAwayDTO.getCustomerReceive()),
+                PrintItemHeaderBuilder.buildHeader(),
+                PrintItemFooterBuilder.buildFooter(orderEntity.getOrderId(), TAKE_AWAY_ORDER_DESKTOP_NUMBER),
                 printItems,
                 usbPrinterConfig.getName(),
                 orderEntity.getTotalPrice()

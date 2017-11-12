@@ -10,9 +10,16 @@ import java.util.List;
 
 public class PrintItemFooterBuilder {
 
-    public static List<String> buildFooter(BigDecimal actualPrice, BigDecimal customerPay, BigDecimal customerReceive) {
+    public static List<String> buildFooter(Integer orderId, Integer desktopNumber) {
         List<String> result = Lists.newArrayList();
 
+        result.add("Número de orden:" + orderId);
+
+        if(desktopNumber != -1) {
+            result.add("Mesa:" + desktopNumber);
+        } else {
+            result.add("Mesa: Para llevar");
+        }
         result.add("Timpo:" + CalFunction.getCurrentTime(SystemConstant.LONG_DATE_FORMAT  ));
 
         return result;
