@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tina.coffee.business.DesktopService;
 import tina.coffee.rest.dto.DesktopDTO;
-import tina.coffee.system.exceptions.desktop.DesktopNotFoundException;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -24,8 +23,8 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Set;
 
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping("/desktop")
 @RestController
