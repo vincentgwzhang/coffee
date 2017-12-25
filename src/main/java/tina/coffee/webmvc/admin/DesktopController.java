@@ -1,5 +1,6 @@
 package tina.coffee.webmvc.admin;
 
+import org.perf4j.aop.Profiled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ public class DesktopController {
     }
 
     @GetMapping("/desktop")
+    @Profiled
     public String desktopPage() {
         return "admin/desktop";
     }

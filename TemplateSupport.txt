@@ -1,0 +1,47 @@
+package com.zooplus.loyalty.common.service.server;
+
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+import java.util.Map;
+
+public class TemplateSupport {
+
+    private final TemplateEngine templateEngine;
+
+    public TemplateSupport() {
+        this(getDefaultTemplateEngine());
+    }
+
+    private static TemplateEngine getDefaultTemplateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setPrefix("/templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setCacheTTLMs(3600000L);
+        templateResolver.setCacheable(false);
+        templateEngine.setTemplateResolver(templateResolver);
+        return templateEngine;
+    }
+
+    public TemplateSupport(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
+    }
+
+    public String render(String templateName, Context context) {
+        return templateEngine.process(templateName, context);
+    }
+
+    public String render(String templateName, Map<String, Object> context) {
+        return render(templateName, toContext(context));
+    }
+
+    private Context toContext(Map<String, Object> report) {
+        Context context = new Context();
+        report.forEach(context::setVariable);
+        return context;
+    }
+}

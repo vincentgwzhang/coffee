@@ -24,8 +24,38 @@
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-
     </appender>
+
+
+    <appender name="perf4jJmxAppender" class="org.perf4j.logback.JmxAttributeStatisticsAppender">
+        <!--
+          You must specify the tag names whose statistics should be exposed as
+          MBean attributes.
+        -->
+        <TagNamesToExpose>admin, desktopPage</TagNamesToExpose>
+        <!--
+          The NotificationThresholds param configures the sending of JMX notifications
+          when statistic values exceed specified thresholds. This config states that
+          the firstBlock max value should be between 0 and 800ms, and the secondBlock max
+          value should be less than 1500 ms. You can also set thresholds on the Min,
+          Mean, StdDev, Count and TPS statistics - e.g. firstBlockMean(<600).
+
+        <NotificationThresholds>firstBlockMax(0-800),secondBlockMax(<1500)</NotificationThresholds>-->
+        <!--
+          You can also specify an optional MBeanName param, which overrides
+          the default MBean name of org.perf4j:type=StatisticsExposingMBean,name=Perf4J
+        -->
+    </appender>
+
+    <appender name="CoalescingStatistics" class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <param name="TimeSlice" value="60000"/>
+        <appender-ref ref="perf4jJmxAppender"/>
+    </appender>
+
+    <logger name="org.perf4j.TimingLogger" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="CoalescingStatistics"/>
+    </logger>
 
     <logger name="tina.coffee.test" level="debug" additivity="false">
         <appender-ref ref="FILE"/>

@@ -1,0 +1,76 @@
+<configuration>
+    <!-- Perf4J appenders -->
+    <!--
+       This AsyncCoalescingStatisticsAppender groups StopWatch log messages
+       into GroupedTimingStatistics messages which it sends on the
+       file appender defined below
+    -->
+    <appender name="CoalescingStatistics" class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <param name="TimeSlice" value="60000"/>
+        <appender-ref ref="graphExecutionTimes"/>
+        <appender-ref ref="graphExecutionTPS"/>
+        <!-- We add the JMX Appender reference onto the CoalescingStatistics -->
+        <appender-ref ref="perf4jJmxAppender"/>
+    </appender>
+
+    <appender name="graphExecutionTimes" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <!-- Possible GraphTypes are Mean, Min, Max, StdDev, Count and TPS -->
+        <param name="GraphType" value="Mean"/>
+        <!-- The tags of the timed execution blocks to graph are specified here -->
+        <param name="TagNamesToGraph" value="DESTROY_TICKET_GRANTING_TICKET,GRANT_SERVICE_TICKET,GRANT_PROXY_GRANTING_TICKET,VALIDATE_SERVICE_TICKET,CREATE_TICKET_GRANTING_TICKET" />
+    </appender>
+
+    <appender name="graphExecutionTPS" class="org.perf4j.logback.GraphingStatisticsAppender">
+        <param name="GraphType" value="TPS" />
+        <param name="TagNamesToGraph" value="DESTROY_TICKET_GRANTING_TICKET,GRANT_SERVICE_TICKET,GRANT_PROXY_GRANTING_TICKET,VALIDATE_SERVICE_TICKET,CREATE_TICKET_GRANTING_TICKET" />
+    </appender>
+
+    <!--
+      This JMX appender creates an MBean and publishes it to the platform MBean server by
+      default.
+    -->
+    <appender name="perf4jJmxAppender" class="org.perf4j.logback.JmxAttributeStatisticsAppender">
+        <!--
+          You must specify the tag names whose statistics should be exposed as
+          MBean attributes.
+        -->
+        <TagNamesToExpose>firstBlock,secondBlock</TagNamesToExpose>
+        <!--
+          The NotificationThresholds param configures the sending of JMX notifications
+          when statistic values exceed specified thresholds. This config states that
+          the firstBlock max value should be between 0 and 800ms, and the secondBlock max
+          value should be less than 1500 ms. You can also set thresholds on the Min,
+          Mean, StdDev, Count and TPS statistics - e.g. firstBlockMean(<600).
+        -->
+        <NotificationThresholds>firstBlockMax(0-800),secondBlockMax(<1500)</NotificationThresholds>
+        <!--
+          You can also specify an optional MBeanName param, which overrides
+          the default MBean name of org.perf4j:type=StatisticsExposingMBean,name=Perf4J
+        -->
+    </appender>
+
+    <!-- This file appender is used to output aggregated performance statistics -->
+    <appender name="perf4jFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>target/perf4j.log</File>
+        <encoder>
+            <Pattern>%date %-5level [%thread] %logger{36} [%file:%line] %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>target/perf4j.%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Loggers -->
+    <!--
+      The Perf4J logger. Note that org.perf4j.TimingLogger is the value of the
+      org.perf4j.StopWatch.DEFAULT_LOGGER_NAME constant. Also, note that
+      additivity is set to false, which is usually what is desired - this means
+      that timing statements will only be sent to this logger and NOT to
+      upstream loggers.
+    -->
+    <logger name="org.perf4j.TimingLogger" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="CoalescingStatistics"/>
+        <appender-ref ref="perf4jFileAppender"/>
+    </logger>
+</configuration>
