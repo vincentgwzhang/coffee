@@ -1,4 +1,4 @@
-package tina.coffee.system.monitoring;
+package tina.coffee.system.interceptors;
 
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;

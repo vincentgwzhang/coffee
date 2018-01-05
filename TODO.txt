@@ -1,13 +1,19 @@
-TODO: 学习前端技术，开发前端
 TODO: 报表
 TODO: 写完 / 开发完整套流程
-TODO: exception message 国际化
-TODO: 密码加密 (Spring Security 放在Spring MCV处，在Springboot 总后台不做任何参与)
 
 Version 2.0
 TODO: 登录系统，准确到是谁操作的
 TODO: 可以修改出菜的顺序
 TODO: 可以是各menu item 的成分进行分析
+
+
+接下来是写报表的问题：
+1, 可以在 JMX export 出了多少道菜
+2, 可以看到有多少桌子是开着的
+3, 可以看到有多少张单正在开着
+
+
+
 
 作为服务人员：
 * 可以查看所有的桌子(状态分：available / customer / disabled)
@@ -99,12 +105,6 @@ TODO: 可以是各menu item 的成分进行分析
 3, 要有预菜式（按人头计）
 4, 支持直接扣除现货，支持凡是设置支持现货扣除的能看到库存
 5, 整个框架要支持直接
-
-
-TODO:
-1) 把上面的东西都测试一次
-2) 打印机的问题
-3) 在 iPAD 上面跑一次
 
 在原有的基础上建立外卖模式，就是能立即出单的那种。就是operator 和 counter 的结合。直接选东西直接就出账单
 native2ascii -encoding utf8 src.txt output.txt

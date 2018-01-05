@@ -1,4 +1,4 @@
-package tina.coffee.system.monitoring;
+package tina.coffee.system.monitoring.metrics;
 
 import com.codahale.metrics.ExponentiallyDecayingReservoir;
 import com.codahale.metrics.Histogram;

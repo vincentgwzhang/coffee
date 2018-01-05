@@ -1,6 +1,9 @@
 package tina.coffee.business;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tina.coffee.Verifier.DesktopVerifier;
@@ -21,10 +24,13 @@ public class DesktopService {
 
     private final DozerMapper mapper;
 
+    private final Counter counter;
+
     @Autowired
-    public DesktopService(DesktopRepository repository, DozerMapper mapper) {
+    public DesktopService(DesktopRepository repository, DozerMapper mapper, @Qualifier("findAllOnSiteDesktopCounter") Counter counter) {
         this.repository = repository;
         this.mapper = mapper;
+        this.counter = counter;
     }
 
     @Transactional(readOnly = true)
@@ -38,6 +44,7 @@ public class DesktopService {
      */
     @Transactional(readOnly = true)
     public List<DesktopDTO> findAllOnSiteDesktop() {
+        counter.inc();
         List<DesktopEntity> entities = repository.findAll();
         entities = entities.stream().filter(entity -> entity.getDeskNo() > 0).collect(Collectors.toList());
         return mapper.map(entities, DesktopDTO.class);

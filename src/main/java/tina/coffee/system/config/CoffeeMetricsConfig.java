@@ -1,10 +1,11 @@
 package tina.coffee.system.config;
 
+import com.codahale.metrics.Counter;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import tina.coffee.system.monitoring.MetricSender;
+import tina.coffee.system.monitoring.metrics.MetricSender;
 import tina.coffee.system.monitoring.metrics.MetricRegistryBuilder;
 
 /**
@@ -27,6 +28,11 @@ public class CoffeeMetricsConfig {
     @Bean
     public MetricSender metricSender() {
         return new MetricSender(metricRegistry());
+    }
+
+    @Bean(name="findAllOnSiteDesktopCounter")
+    public Counter findAllOnSiteDesktopCounter() {
+        return metricRegistry().counter("FindAllOnSiteDesktopCounter");
     }
 
 }

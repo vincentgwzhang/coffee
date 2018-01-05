@@ -11,7 +11,6 @@ import tina.coffee.business.DesktopService;
 import tina.coffee.rest.dto.DesktopDTO;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("admin")

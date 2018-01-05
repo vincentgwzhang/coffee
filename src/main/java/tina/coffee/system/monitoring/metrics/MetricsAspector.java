@@ -1,4 +1,4 @@
-package tina.coffee.system.monitoring;
+package tina.coffee.system.monitoring.metrics;
 
 import com.codahale.metrics.MetricRegistry;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,7 +37,7 @@ public class MetricsAspector {
 
     @Around("isMVCMethod() && containMappingAnnotation()")
     public Object registryMark(ProceedingJoinPoint joinPoint) throws Throwable{
-        logger.info("{} start", joinPoint.getSignature().getName());
+        logger.debug("{} start", joinPoint.getSignature().getName());
 
         StopWatch stopWatch = metricSender.getStartedStopWatch();
 
@@ -48,7 +48,7 @@ public class MetricsAspector {
             String methodName = joinPoint.getSignature().getName();
             metricSender.stopAndSend(stopWatch, clazz, methodName);
 
-            logger.info("{} end", methodName);
+            logger.debug("{} end", methodName);
         }
 
     }
