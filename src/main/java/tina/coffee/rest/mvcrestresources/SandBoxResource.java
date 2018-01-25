@@ -1,6 +1,9 @@
 package tina.coffee.rest.mvcrestresources;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +16,6 @@ import tina.coffee.system.monitoring.selfmetrics.CustomMetrics;
 import javax.management.AttributeNotFoundException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Produces;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,21 @@ public class SandBoxResource {
 
     @Autowired
     private CustomMetrics customMetrics;
+
+    @Autowired
+    private CacheManager cacheManager;
+
+    @GetMapping("cacheTest/{cachevalue}")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PingDto> ehCacheTest(@NotNull @PathVariable("cachevalue") String cachevalue) {
+        Cache sandBoxCustomCache = cacheManager.getCache("sandBoxCustomCache");
+
+        PingDto pingDto = new PingDto();
+        pingDto.setKey("isCached");
+        pingDto.setValue(sandBoxCustomCache.get(cachevalue)!=null ? "true":"false");
+        sandBoxCustomCache.putIfAbsent(cachevalue, cachevalue);
+        return new ResponseEntity<>(pingDto, OK);
+    }
 
     @GetMapping("cutomMetrics1/{metrics:.+}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
