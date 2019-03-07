@@ -29,7 +29,7 @@ CREATE TABLE `users_roles`  (
   INDEX `fk_ur_cr`(`role_id`) USING BTREE,
   CONSTRAINT `fk_ur_cr` FOREIGN KEY (`role_id`) REFERENCES `coffee_role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_ur_cu` FOREIGN KEY (`user_id`) REFERENCES `coffee_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of users_roles

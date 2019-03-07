@@ -32,4 +32,4 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`order_id`),
   KEY `fk_order_desktop` (`order_desktop_no`),
   CONSTRAINT `fk_order_desktop` FOREIGN KEY (`order_desktop_no`) REFERENCES `desktop` (`desk_no`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

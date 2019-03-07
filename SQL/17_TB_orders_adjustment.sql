@@ -33,6 +33,6 @@ CREATE TABLE `orders_adjustment`  (
   INDEX `oa_oao+fk`(`overview_id`) USING BTREE,
   CONSTRAINT `oa_o_fk` FOREIGN KEY (`original_order_id`) REFERENCES `orders` (`order_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `oa_oao+fk` FOREIGN KEY (`overview_id`) REFERENCES `order_adjustment_overview` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

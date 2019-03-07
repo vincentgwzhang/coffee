@@ -175,7 +175,7 @@ public class ImportHistoryService {
     public void deleteImportHistoryById(Integer id) {
         Optional<ImportHistoryEntity> entityOptional = repository.findByIhId(id);
         ImportHistoryVerifier.verifyIfImportHistoryExistOrThrow(entityOptional);
-        repository.delete(id);
+        repository.deleteById(id);
 
         ImportHistoryEntity entity = entityOptional.get();
 

@@ -91,7 +91,7 @@ public class MenuCategoryService {
             }
 
             deleteMenuCategoryLanguageEntitiesByMenuCategoryEntity(entity.get());
-            repository.delete(id);
+            repository.deleteById(id);
         }
     }
 
@@ -110,7 +110,7 @@ public class MenuCategoryService {
         Set<MenuCategoryLanguageEntity> languages = categoryEntity.getLanguages();
         languages.forEach(language -> language.setMenuCategoryEntity(categoryEntity));
         MenuCategoryEntity savedEntity = repository.save(categoryEntity);
-        languageRepository.save(languages);
+        languageRepository.saveAll(languages);
 
         return Optional.ofNullable(savedEntity)
                 .map(en -> mapper.map(en,MenuCategoryDTO.class))
@@ -130,7 +130,7 @@ public class MenuCategoryService {
         final MenuCategoryEntity entityToDB = mapper.map(menuCategoryDTO, MenuCategoryEntity.class);
         Set<MenuCategoryLanguageEntity> languages = entityToDB.getLanguages();
         languages.forEach(language -> language.setMenuCategoryEntity(entityToDB));
-        languageRepository.save(languages);
+        languageRepository.saveAll(languages);
         MenuCategoryEntity savedEntity = repository.save(entityToDB);
 
         return Optional.ofNullable(savedEntity)
@@ -140,7 +140,7 @@ public class MenuCategoryService {
 
     private void deleteMenuCategoryLanguageEntitiesByMenuCategoryEntity(MenuCategoryEntity entity) {
         Set<MenuCategoryLanguageEntity> languages = entity.getLanguages();
-        languageRepository.delete(languages);
+        languageRepository.deleteAll(languages);
     }
 
     private void verifiyDescriptionNotDuplicateOrThrow(String languageDescription) {

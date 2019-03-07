@@ -69,9 +69,14 @@ public class MenuItemService {
 
     @Transactional(readOnly = true)
     public List<MenuItemDTO> listAllMenuItemsByMenuCategory(Integer menuCategoryId) {
-        MenuCategoryEntity menuCategoryEntity = menuCategoryRepository.findOne(menuCategoryId);
-        List<MenuItemEntity> entities = repository.getMenuItemEntitiesByMenuCategoryEntity(menuCategoryEntity);
-        return mapper.map(entities, MenuItemDTO.class);
+        Optional<MenuCategoryEntity> menuCategoryEntity = menuCategoryRepository.findById(menuCategoryId);
+        if(menuCategoryEntity.isPresent()) {
+            List<MenuItemEntity> entities = repository.getMenuItemEntitiesByMenuCategoryEntity(menuCategoryEntity.get());
+            return mapper.map(entities, MenuItemDTO.class);
+        } else {
+            return Lists.newArrayList();
+        }
+
     }
 
     @Transactional(readOnly = true)
@@ -102,7 +107,7 @@ public class MenuItemService {
             throw new MenuItemAssociateOrdersException(orderDetail.get());
         }
         deleteMenuItemLanguageEntitiesByMenuItemEntity(entity.get());
-        repository.delete(id);
+        repository.deleteById(id);
     }
 
     @Transactional
@@ -142,7 +147,7 @@ public class MenuItemService {
 
         //save language first
         List<MenuItemLanguageEntity> languages = new ArrayList<>(itemEntity.getLanguages());
-        menuItemLanguageRepository.save(languages);
+        menuItemLanguageRepository.saveAll(languages);
         return Optional.ofNullable(itemEntity).map(en -> mapper.map(en, MenuItemDTO.class)).orElseThrow(MenuItemBusinessException.newMenuItemBusinessException(MenuItemBusinessException.ERROR_NOT_CREATED));
     }
 
@@ -170,7 +175,7 @@ public class MenuItemService {
 
         //save language first
         List<MenuItemLanguageEntity> languages = new ArrayList<>(entityToDB.getLanguages());
-        menuItemLanguageRepository.save(languages);
+        menuItemLanguageRepository.saveAll(languages);
 
         //save item in the end
         entityToDB = repository.save(entityToDB);
@@ -205,7 +210,7 @@ public class MenuItemService {
 
     private void deleteMenuItemLanguageEntitiesByMenuItemEntity(MenuItemEntity entity) {
         List<MenuItemLanguageEntity> languages = new ArrayList<>(entity.getLanguages());
-        menuItemLanguageRepository.delete(languages);
+        menuItemLanguageRepository.deleteAll(languages);
     }
 
     private String calanderToString(Calendar source) {

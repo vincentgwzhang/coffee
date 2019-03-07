@@ -29,6 +29,6 @@ CREATE TABLE `import_product_count`  (
   PRIMARY KEY (`ipc_id`) USING BTREE,
   KEY `ipc_ip_id` (`ipc_ip_id`),
   CONSTRAINT `ipc_fk_ip` FOREIGN KEY (`ipc_ip_id`) REFERENCES `import_product` (`ip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

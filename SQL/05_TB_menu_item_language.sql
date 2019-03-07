@@ -29,4 +29,4 @@ CREATE TABLE `menu_item_language` (
   PRIMARY KEY (`mil_id`),
   KEY `mil_fk_mi` (`mil_mi_id`),
   CONSTRAINT `mil_fk_mi` FOREIGN KEY (`mil_mi_id`) REFERENCES `menu_item` (`mi_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

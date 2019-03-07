@@ -48,6 +48,6 @@ public class MenuQueueService {
 
     @Transactional
     public void removeInChiefMonitor(Integer mqId) {
-        repository.delete(mqId);
+        repository.deleteById(mqId);
     }
 }

@@ -28,20 +28,20 @@ public class SandBoxResource {
     @Autowired
     private CustomMetrics customMetrics;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @GetMapping("cacheTest/{cachevalue}")
-    @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PingDto> ehCacheTest(@NotNull @PathVariable("cachevalue") String cachevalue) {
-        Cache sandBoxCustomCache = cacheManager.getCache("sandBoxCustomCache");
-
-        PingDto pingDto = new PingDto();
-        pingDto.setKey("isCached");
-        pingDto.setValue(sandBoxCustomCache.get(cachevalue)!=null ? "true":"false");
-        sandBoxCustomCache.putIfAbsent(cachevalue, cachevalue);
-        return new ResponseEntity<>(pingDto, OK);
-    }
+//    @Autowired
+//    private CacheManager cacheManager;
+//
+//    @GetMapping("cacheTest/{cachevalue}")
+//    @Produces(MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<PingDto> ehCacheTest(@NotNull @PathVariable("cachevalue") String cachevalue) {
+//        Cache sandBoxCustomCache = cacheManager.getCache("sandBoxCustomCache");
+//
+//        PingDto pingDto = new PingDto();
+//        pingDto.setKey("isCached");
+//        pingDto.setValue(sandBoxCustomCache.get(cachevalue)!=null ? "true":"false");
+//        sandBoxCustomCache.putIfAbsent(cachevalue, cachevalue);
+//        return new ResponseEntity<>(pingDto, OK);
+//    }
 
     @GetMapping("cutomMetrics1/{metrics:.+}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)

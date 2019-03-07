@@ -34,6 +34,6 @@ CREATE TABLE `import_history`  (
   INDEX `fk_ih_ihs`(`ih_ihs_id`) USING BTREE,
   CONSTRAINT `fk_ih_ip` FOREIGN KEY (`ih_ip_id`) REFERENCES `import_product` (`ip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_ih_ihs` FOREIGN KEY (`ih_ihs_id`) REFERENCES `import_history_summary` (`ihs_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

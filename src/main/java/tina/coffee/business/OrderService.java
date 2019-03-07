@@ -347,7 +347,7 @@ public class OrderService {
     @Transactional
     public void closeTakeAway(CloseTakeAwayDTO closeTakeAwayDTO) {
         OrderDTO orderDTO = createNewOrder(TAKE_AWAY_ORDER_DESKTOP_NUMBER);
-        OrderEntity orderEntity = repository.findOne(orderDTO.getOrderId());
+        OrderEntity orderEntity = repository.findById(orderDTO.getOrderId()).get();
 
         List<CloseOrderItemDTO> closeOrderItemDTOS = closeTakeAwayDTO.getOrderItemDTOList();
         Set<OrderItemEntity> orderItemEntities = new HashSet<>();

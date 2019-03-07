@@ -190,13 +190,13 @@ public class OrderItemService {
      */
     @Transactional
     public void orderTakeAwayItem(Integer menuitemId, Integer count) {
-        MenuItemEntity entity = menuItemRepository.findOne(menuitemId);
+        Optional<MenuItemEntity> entity = menuItemRepository.findById(menuitemId);
 
-        if( entity.isToChief() ) {
-            String menuName = entity.getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.CHINESE).map(mi -> mi.getMilDescription()).findFirst().get();
+        if(entity.isPresent() && entity.get().isToChief() ) {
+            String menuName = entity.get().getLanguages().stream().filter(l -> l.getLanguageType() == LanguageType.CHINESE).map(mi -> mi.getMilDescription()).findFirst().get();
             printToChief(menuName, -1, count);
 
-            updateImportProductCount(entity, count);
+            updateImportProductCount(entity.get(), count);
         }
     }
 
@@ -238,7 +238,7 @@ public class OrderItemService {
 
     @Transactional
     public List<OrderItemDTO> getOrderItemInStatus(Integer orderNumber, List<String> statuses, Integer count) {
-        Pageable topCount = new PageRequest(0, count);
+        Pageable topCount = PageRequest.of(0, count);
         List<OrderItemStatus> orderItemStatuses = statuses.stream().map(OrderItemStatus::valueOf).collect(Collectors.toList());
         Optional<OrderEntity> orderEntity = orderRepository.findByOrderId(orderNumber);
         OrderVerifier.verifiyIfOrderExistOrThrow(orderEntity);

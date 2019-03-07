@@ -34,4 +34,4 @@ CREATE TABLE `order_item` (
   KEY `fk_order_items_orders` (`order_item_order_id`),
   CONSTRAINT `fk_order_items_menu_item` FOREIGN KEY (`order_item_menu_item_id`) REFERENCES `menu_item` (`mi_id`),
   CONSTRAINT `fk_order_items_orders` FOREIGN KEY (`order_item_order_id`) REFERENCES `orders` (`order_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

@@ -77,6 +77,10 @@ public class ValidationConfigurationContextResolver implements ContextResolver<V
             return names;
         }
 
+        protected String getPrefix() {
+            return "arg";
+        }
+
         private String retrieveParameterName(Annotation[] annotations) {
             for (Annotation annotation : annotations) {
                 if (annotation.annotationType() == QueryParam.class) {

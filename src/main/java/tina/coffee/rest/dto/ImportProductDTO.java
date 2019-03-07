@@ -1,6 +1,6 @@
 package tina.coffee.rest.dto;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import tina.coffee.function.JsonFunction;
 
 import javax.validation.constraints.NotNull;

@@ -28,7 +28,7 @@ CREATE TABLE `desktop` (
   `desk_occupied` int(11) NOT NULL DEFAULT '0' COMMENT 'occupied stand for this table has order not closed',
   PRIMARY KEY (`desk_id`),
   UNIQUE KEY `desk_unique` (`desk_no`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO `desktop` VALUES ('1000', '-1', '1', '0');
 -- ----------------------------

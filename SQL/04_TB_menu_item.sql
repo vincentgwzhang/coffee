@@ -31,4 +31,4 @@ CREATE TABLE `menu_item` (
   PRIMARY KEY (`mi_id`),
   KEY `mi_fk_mc` (`mi_mc_id`),
   CONSTRAINT `mi_fk_mc` FOREIGN KEY (`mi_mc_id`) REFERENCES `menu_category` (`mc_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

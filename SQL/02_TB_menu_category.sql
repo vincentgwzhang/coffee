@@ -26,4 +26,4 @@ CREATE TABLE `menu_category` (
   `mc_name` varchar(255) NOT NULL,
   `mc_enable` int(11) NOT NULL,
   PRIMARY KEY (`mc_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
