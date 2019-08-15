@@ -20,6 +20,8 @@ public class CoffeeServerConfig {
     public JettyServletWebServerFactory jettyServletContainer(
             @Value("${Jetty.Thread.max}") Integer jettyThreadMax,
             @Value("${Jetty.Thread.min}") Integer jettyThreadMin,
+            @Value("${Jetty.acceptors}") Integer jettyAcceptors,
+            @Value("${Jetty.selectors}") Integer jettySelectors,
             @Value("${server.contextPath}") String contextPath,
             @Value("${server.port}") Integer port){
         final JettyServletWebServerFactory factory = new JettyServletWebServerFactory(port);
@@ -35,6 +37,8 @@ public class CoffeeServerConfig {
                 });
         factory.setRegisterDefaultServlet(false);
         factory.setContextPath(contextPath);
+        factory.setAcceptors(jettyAcceptors);
+        factory.setSelectors(jettySelectors);
         return factory;
     }
 }
