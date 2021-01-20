@@ -16,7 +16,7 @@
         <spring.version>5.1.9.RELEASE</spring.version>
         <HikariCP.version>3.3.1</HikariCP.version>
         <mysql.driver.version>8.0.15</mysql.driver.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <google.guava.version>28.0-jre</google.guava.version>
