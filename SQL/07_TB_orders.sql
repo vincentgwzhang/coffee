@@ -25,7 +25,7 @@ CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_desktop_no` int(11) DEFAULT NULL COMMENT '-1 stand for take away order',
   `order_start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `order_end_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `order_end_time` timestamp DEFAULT CURRENT_TIMESTAMP,
   `order_total_price` decimal(7,2) DEFAULT NULL,
   `order_actual_price` decimal(7,2) DEFAULT NULL,
   `order_type` varchar(255) NOT NULL COMMENT 'OPEN: not clearing == CLOSE: Already close == LOST: customer has not paid',

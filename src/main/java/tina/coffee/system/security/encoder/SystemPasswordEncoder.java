@@ -14,4 +14,8 @@ public class SystemPasswordEncoder implements PasswordEncoder{
         return encode(rawPassword).equalsIgnoreCase(encodedPassword);
     }
 
+    public static void main(String[] args) {
+        System.out.println(new SystemPasswordEncoder().encode("Summer"));
+    }
+
 }
